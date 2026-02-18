@@ -52,7 +52,7 @@ export default function Navbar() {
         />
 
         <div className="relative z-10 shrink-0">
-          {/* <NavLogo isScrolled={isScrolled} /> */}
+          <NavLogo isScrolled={isScrolled} />
         </div>
 
         <div className="hidden md:flex flex-1 justify-center items-center">

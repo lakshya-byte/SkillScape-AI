@@ -6,12 +6,14 @@ interface NavLinksProps {
 }
 
 const links = [
-  { name: 'About', href: '/about' },
-  { name: 'Events', href: '/events' },
-  { name: 'Projects', href: '/projects' },
-  { name: 'Team', href: '/team' },
-  { name: 'Contact', href: '/contact' },
+  { name: "Platform", href: "/platform" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "Docs", href: "/docs" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
+
+
 
 const NavLinks: React.FC<NavLinksProps> = ({ isScrolled }) => {
   return (

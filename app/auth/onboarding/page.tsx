@@ -1,19 +1,6 @@
-import React from 'react'
-import Step0_Welcome from '@/components/auth/onboarding/steps/Step0_Welcome'
-import { OnboardingProvider } from '@/components/auth/onboarding/OnboardingContext'
-import Step1_Identity from '@/components/auth/onboarding/steps/Step1_Identity'
-import Step2_Avatar from '@/components/auth/onboarding/steps/Step2_Avatar'
+import { redirect } from "next/navigation";
 
-const page = () => {
-  return (
-    <div>
-      <OnboardingProvider>
-        {/* <Step0_Welcome /> */}
-        {/* <Step1_Identity /> */}
-        <Step2_Avatar />
-      </OnboardingProvider> 
-    </div>
-  )
+// Legacy route — redirect to the new route-based onboarding
+export default function LegacyOnboardingPage() {
+  redirect("/onboarding/welcome");
 }
-
-export default page

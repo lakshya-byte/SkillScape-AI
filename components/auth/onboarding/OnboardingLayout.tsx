@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 
 // Internal Asset: The "Secure Connection" Pulse
 const StatusLight = () => (
@@ -23,7 +23,12 @@ const AudioWave = () => (
       <motion.div
         key={i}
         animate={{ height: [4, 12, 4] }}
-        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          delay: i * 0.1,
+          ease: "easeInOut",
+        }}
         className="w-1 bg-purple-500/50 rounded-full"
       />
     ))}
@@ -36,13 +41,16 @@ interface OnboardingLayoutProps {
   totalSteps: number;
 }
 
-export default function OnboardingLayout({ children, step, totalSteps }: OnboardingLayoutProps) {
+export default function OnboardingLayout({
+  children,
+  step,
+  totalSteps,
+}: OnboardingLayoutProps) {
   // Calculate progress for the top bar
   const progress = ((step + 1) / totalSteps) * 100;
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#030014] text-white selection:bg-purple-500/30">
-      
+    <div className="relative w-full min-h-screen overflow-y-auto bg-[#030014] text-white selection:bg-purple-500/30">
       {/* 1. ATMOSPHERE LAYER */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         {/* Deep Space Gradient */}
@@ -56,7 +64,6 @@ export default function OnboardingLayout({ children, step, totalSteps }: Onboard
 
       {/* 2. HEADS UP DISPLAY (HUD) - Fixed UI Elements */}
       <div className="fixed inset-0 z-50 pointer-events-none flex flex-col justify-between p-6 md:p-8">
-        
         {/* Top Bar */}
         <div className="flex justify-between items-start">
           {/* Left: Boot Sequence ID */}
@@ -67,13 +74,17 @@ export default function OnboardingLayout({ children, step, totalSteps }: Onboard
               </span>
               <span>SYSTEM_BOOT_SEQ</span>
             </div>
-            <div className="text-[10px] text-slate-600 font-mono pl-5">ID: 884-AX-92</div>
+            <div className="text-[10px] text-slate-600 font-mono pl-5">
+              ID: 884-AX-92
+            </div>
           </div>
 
           {/* Right: Connection Status */}
           <div className="text-right flex flex-col items-end gap-1">
             <StatusLight />
-            <div className="text-[10px] text-slate-600 font-mono">LATENCY: 12MS</div>
+            <div className="text-[10px] text-slate-600 font-mono">
+              LATENCY: 12MS
+            </div>
           </div>
         </div>
 
@@ -83,22 +94,24 @@ export default function OnboardingLayout({ children, step, totalSteps }: Onboard
             <span className="px-2 py-1 rounded bg-white/5 border border-white/5 text-purple-300">
               VELION_CORE v2.0.4
             </span>
-            <span className="hidden md:inline-block pt-1">Memory: 64TB Allocated</span>
+            <span className="hidden md:inline-block pt-1">
+              Memory: 64TB Allocated
+            </span>
           </div>
 
           <div className="flex items-center gap-4">
-             {/* Simple Step Indicator */}
-             <div className="text-[10px] text-slate-600 font-mono">
-                STEP {step + 1} / {totalSteps}
-             </div>
-             <AudioWave />
+            {/* Simple Step Indicator */}
+            <div className="text-[10px] text-slate-600 font-mono">
+              STEP {step + 1} / {totalSteps}
+            </div>
+            <AudioWave />
           </div>
         </div>
       </div>
 
       {/* 3. PROGRESS LINE (The "Laser") */}
       <div className="fixed top-0 left-0 h-[2px] bg-white/5 w-full z-40">
-        <motion.div 
+        <motion.div
           className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 shadow-[0_0_20px_rgba(168,85,247,0.8)]"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
@@ -107,10 +120,9 @@ export default function OnboardingLayout({ children, step, totalSteps }: Onboard
       </div>
 
       {/* 4. MAIN CONTENT STAGE */}
-      <main className="relative z-10 w-full h-full flex flex-col items-center justify-center p-6">
+      <main className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center p-6 py-20">
         {children}
       </main>
-
     </div>
   );
 }
