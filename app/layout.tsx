@@ -36,7 +36,8 @@ export default function RootLayout({
         <Navbar />
         <SmoothScrollProvider>
           <PreloaderProvider>
-            <Preloader />
+            {/* <Preloader /> */}
+
             {children}
           </PreloaderProvider>
         </SmoothScrollProvider>
