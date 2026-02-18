@@ -24,12 +24,12 @@ export default function FooterBottom() {
     >
       {/* Copyright */}
       <span>
-        © {year} GraphX 3D. All rights reserved.
+        © {year} ValionAI. All rights reserved.
       </span>
 
       {/* Ownership line */}
-      <span className="text-white/30">
-        Built for interactive mathematical and data visualization.
+      <span className="text-white/30 italic">
+        Empowering users with immersive AI-driven visualizations.
       </span>
     </div>
   );
