@@ -69,42 +69,43 @@ export default function PillarsSection() {
       >
         {/* Section Label */}
         <SectionReveal>
-          <span
-            className="
-              text-[11px]
-              md:text-xs
+  <span
+    className="
+      text-[11px]
+      md:text-xs
 
-              uppercase
-              tracking-[0.4em]
+      uppercase
+      tracking-[0.4em]
 
-              text-white/40
-            "
-          >
-            Domains
-          </span>
-        </SectionReveal>
+      text-white/40
+    "
+  >
+    SkillScape Features
+  </span>
+</SectionReveal>
 
-        {/* Section Heading */}
-        <SectionReveal delay={0.1}>
-          <h2
-            className="
-              mt-6
+{/* Section Heading */}
+<SectionReveal delay={0.1}>
+  <h2
+    className="
+      mt-6
 
-              text-3xl
-              sm:text-4xl
-              md:text-5xl
-              lg:text-6xl
+      text-3xl
+      sm:text-4xl
+      md:text-5xl
+      lg:text-6xl
 
-              font-semibold
+      font-semibold
 
-              tracking-tight
+      tracking-tight
 
-              text-white
-            "
-          >
-            Choose Your Domain
-          </h2>
-        </SectionReveal>
+      text-white
+    "
+  >
+    Explore Your Technical Intelligence
+  </h2>
+</SectionReveal>
+
 
         {/* Pillars Grid */}
         <div

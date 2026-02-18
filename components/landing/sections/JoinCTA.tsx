@@ -141,8 +141,8 @@ export default function JoinCTA() {
             drop-shadow-2xl
           "
         >
-          Ready to Build <br />
-          <span className="text-white">What Others Can't?</span>
+Visualize Your Skills <br />
+<span className="text-white">Like Never Before</span>
         </h2>
 
         {/* SUBTEXT */}
@@ -150,8 +150,8 @@ export default function JoinCTA() {
           ref={subRef}
           className="mt-8 text-zinc-400 text-lg md:text-xl max-w-2xl font-light leading-relaxed"
         >
-          Join the elite engineering society of JSS Noida. <br className="hidden md:block"/>
-          We don't just write code; we architect systems.
+Transform your GitHub and projects into a living intelligence graph. <br className="hidden md:block"/>
+Explore your technical brain and unlock your future with AI.
         </p>
 
         {/* --- GOD-TIER BUTTON --- */}
@@ -187,7 +187,7 @@ export default function JoinCTA() {
                 
                 {/* Text */}
                 <span className="text-lg font-medium text-white tracking-wide">
-                  Apply for Membership
+Connect GitHub
                 </span>
 
                 {/* Arrow Icon with Slide Animation */}

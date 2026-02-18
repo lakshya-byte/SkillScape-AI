@@ -13,38 +13,39 @@ gsap.registerPlugin(ScrollTrigger);
 
 const timelineData = [
   {
-    date: "22 February 2026",
+    date: "Step 01 — Connect Your Data",
     events: [
-      "Online Aptitude and Club Based MCQ Round for First Year students",
+      "Securely connect your GitHub, projects, and learning platforms",
+      "SkillScape AI analyzes repositories, commits, and technologies",
+      "Automatically extracts skills, tools, and knowledge signals",
     ],
   },
   {
-    date: "23 February 2026",
+    date: "Step 02 — AI Skill Intelligence",
     events: [
-      "Technical Proficiency Round for Programming Club",
-      "Group Discussion for shortlisted First Year candidates",
+      "Advanced AI models classify and evaluate your technical skills",
+      "Builds relationships between skills, projects, and concepts",
+      "Identifies strengths, weaknesses, and hidden potential",
     ],
   },
   {
-    date: "24 February 2026",
+    date: "Step 03 — 3D Knowledge Graph Generation",
     events: [
-      "Technical Proficiency Round for Development Club",
-      "Technical Proficiency Round for AIML Club",
-      "Technical Proficiency Round for Design Club",
-      "Group Discussion for shortlisted First Year candidates",
-      "Resume submission and shortlisting for Second Year students",
+      "Transforms your skills into an interactive 3D intelligence graph",
+      "Visualizes technologies as connected nodes in real-time space",
+      "Explore your technical ecosystem in an immersive experience",
     ],
   },
   {
-    date: "25 February 2026",
+    date: "Step 04 — Growth Insights & Prediction",
     events: [
-      "Technical Interview for shortlisted candidates",
-      "HR Round",
-      "Time: 4:45 PM to 6:45 PM",
-      "Venue: AB1 Computer Centre",
+      "AI predicts future skill evolution and career trajectory",
+      "Recommends high-impact skills to learn next",
+      "Simulates how new skills reshape your intelligence graph",
     ],
   },
 ];
+
 
 export default function RecruitmentTimelineSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -95,36 +96,37 @@ export default function RecruitmentTimelineSection() {
       <GridBackground />
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <SectionReveal>
-          <div className="text-center mb-24">
-            <span
-              className="
-              text-xs
-              uppercase
-              tracking-[0.4em]
-              text-white/40
-            "
-            >
-              Recruitment Timeline
-            </span>
+       <SectionReveal>
+  <div className="text-center mb-24">
+    <span
+      className="
+        text-xs
+        uppercase
+        tracking-[0.4em]
+        text-white/40
+      "
+    >
+      SkillScape Intelligence Flow
+    </span>
 
-            <h2
-              className="
-              mt-6
+    <h2
+      className="
+        mt-6
 
-              text-3xl
-              sm:text-4xl
-              md:text-5xl
-              lg:text-6xl
+        text-3xl
+        sm:text-4xl
+        md:text-5xl
+        lg:text-6xl
 
-              font-semibold
-              text-white
-            "
-            >
-              Your Journey Into Nibble
-            </h2>
-          </div>
-        </SectionReveal>
+        font-semibold
+        text-white
+      "
+    >
+      Your Journey Into Technical Intelligence
+    </h2>
+  </div>
+</SectionReveal>
+
 
         <div className="relative">
           {/* Static Spine */}

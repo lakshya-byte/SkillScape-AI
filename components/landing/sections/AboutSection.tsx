@@ -9,9 +9,9 @@ const AboutSection = () => {
       <div className="w-full mx-auto h-[50vh] min-h-[420px] overflow-hidden">
         <Vortex
           backgroundColor="black"
-          rangeY={500} // Reduced for subtle movement
-          particleCount={200} // Reduced to avoid hero duplication
-          baseHue={120}
+          rangeY={500}
+          particleCount={200}
+          baseHue={270} // changed to purple theme for SkillScape
           rangeSpeed={0.5}
           className="
             flex flex-col
@@ -37,7 +37,7 @@ const AboutSection = () => {
             mb-6
           "
           >
-            What is Nibble
+            What is SkillScape AI
           </span>
 
           {/* Main Heading */}
@@ -57,9 +57,9 @@ const AboutSection = () => {
             max-w-4xl
           "
           >
-            The Official Technical Society
+            Your Technical Intelligence,
             <br />
-            of JSS Noida
+            Visualized in 3D
           </h2>
 
           {/* Supporting Statement */}
@@ -76,9 +76,10 @@ const AboutSection = () => {
             leading-relaxed
           "
           >
-            Nibble Computer Society builds engineers, not just members. We
-            design and deploy real-world systems — from AI platforms and
-            scalable web infrastructure to high-performance applications.
+            SkillScape AI transforms your GitHub, projects, and learning data
+            into a living intelligence graph. Explore your skills, understand
+            relationships between technologies, and gain deep insights into your
+            technical evolution.
           </p>
 
           {/* Manifesto Line */}
@@ -94,8 +95,8 @@ const AboutSection = () => {
             text-white/80
           "
           >
-            Not just learners.
-            <span className="text-white ml-2">Builders.</span>
+            Not just data.
+            <span className="text-white ml-2">Intelligence.</span>
           </p>
         </Vortex>
       </div>

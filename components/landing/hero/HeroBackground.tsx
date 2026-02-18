@@ -104,7 +104,7 @@ function HeroBackground() {
         >
           <Spline
             scene="https://prod.spline.design/q7NUhUBbLZDl0m1s/scene.splinecode"
-            className="w-full h-full"
+            className="!w-full !h-full"
           />
         </div>
       )}

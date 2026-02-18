@@ -9,26 +9,27 @@ gsap.registerPlugin(ScrollTrigger);
 
 const CARD_DATA = [
   {
-    title: "Build Real Systems",
+    title: "AI Skill Intelligence",
     description:
-      "Work on production-grade platforms used by real users. Engineer systems that scale.",
+      "Analyze your GitHub and projects to automatically detect, classify, and evaluate your real-world technical skills.",
   },
   {
-    title: "Elite Engineering Culture",
+    title: "Interactive 3D Knowledge Graph",
     description:
-      "Collaborate with highly driven engineers obsessed with performance and quality.",
+      "Visualize your entire skill ecosystem as an immersive 3D intelligence graph with connected technologies and concepts.",
   },
   {
-    title: "Create Cinematic Interfaces",
+    title: "Discover Strengths & Skill Gaps",
     description:
-      "Build Awwwards-level interactive experiences using modern frontend technologies.",
+      "Understand your true strengths, uncover hidden weaknesses, and gain deep insights into your technical intelligence.",
   },
   {
-    title: "Accelerate Your Growth",
+    title: "Predict Your Future Growth",
     description:
-      "Develop real-world engineering skills and become industry-ready.",
+      "Simulate skill evolution, explore future learning paths, and accelerate your journey toward technical mastery.",
   },
 ];
+
 
 export default function WhyJoinNibble() {
   const sectionRef = useRef<HTMLDivElement>(null);

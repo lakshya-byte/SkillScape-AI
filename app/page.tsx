@@ -74,12 +74,6 @@ export default function Page() {
 
       <LazyMount>
         <section className="lazy-section">
-          <IdentitySection />
-        </section>
-      </LazyMount>
-
-      <LazyMount>
-        <section className="lazy-section">
           <AboutSection />
         </section>
       </LazyMount>
