@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/navbar/Navbar";
+import Footer from "@/components/footer/Footer";
+import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
+import PreloaderProvider from "@/components/providers/PreloaderProvider";
+import Preloader from "@/components/preloader/Preloader";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +31,17 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning={true}
       >
-        {children}
+        <Navbar />
+        <SmoothScrollProvider>
+          <PreloaderProvider>
+            <Preloader />
+
+            {children}
+          </PreloaderProvider>
+        </SmoothScrollProvider>
+        <Footer />
       </body>
     </html>
   );
