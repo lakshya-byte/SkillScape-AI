@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema(
         platforms:{
             github: {
                 url:String,
-                username:String,
                 oauthConnected: {type:Boolean,default:false},
                 accessToken:String
             },

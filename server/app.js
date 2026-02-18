@@ -26,8 +26,8 @@ app.use(cookieParser());
 
 app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
-app.use("/api/github",githubRouter)
-app.use("/api/notion",notionRouter)
+app.use("/github",githubRouter)
+app.use("/notion",notionRouter)
 
 
 app.use(errorHandler);
