@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import SectionReveal from "@/components/ui/SectionReveal";
+import SectionReveal from "@/components/landing/ui/SectionReveal";
 
 type TimelineItemProps = {
   date: string;
@@ -14,22 +14,16 @@ export default function TimelineItem({
   events,
   index,
 }: TimelineItemProps) {
-
   const isLeft = index % 2 === 0;
 
   const nodeRef = useRef<HTMLDivElement>(null);
 
   return (
-
     <div className="relative flex items-center justify-center">
-
       {/* LEFT SIDE */}
       <div className="w-1/2 flex justify-end pr-10">
-
         {isLeft && (
-
           <SectionReveal delay={0.1}>
-
             <div
               className="
                 relative
@@ -51,43 +45,30 @@ export default function TimelineItem({
                 transition-all duration-300
               "
             >
-
               {/* Date */}
-              <h3 className="
+              <h3
+                className="
                 text-white
                 text-lg
                 md:text-xl
                 font-semibold
-              ">
+              "
+              >
                 {date}
               </h3>
 
-
               {/* Events */}
               <ul className="mt-4 space-y-2">
-
                 {events.map((event, i) => (
-
-                  <li
-                    key={i}
-                    className="text-white/60 text-sm md:text-base"
-                  >
+                  <li key={i} className="text-white/60 text-sm md:text-base">
                     {event}
                   </li>
-
                 ))}
-
               </ul>
-
             </div>
-
           </SectionReveal>
-
         )}
-
       </div>
-
-
 
       {/* CENTER NODE */}
       <div
@@ -111,15 +92,10 @@ export default function TimelineItem({
         "
       />
 
-
-
       {/* RIGHT SIDE */}
       <div className="w-1/2 flex justify-start pl-10">
-
         {!isLeft && (
-
           <SectionReveal delay={0.1}>
-
             <div
               className="
                 relative
@@ -141,44 +117,30 @@ export default function TimelineItem({
                 transition-all duration-300
               "
             >
-
               {/* Date */}
-              <h3 className="
+              <h3
+                className="
                 text-white
                 text-lg
                 md:text-xl
                 font-semibold
-              ">
+              "
+              >
                 {date}
               </h3>
 
-
               {/* Events */}
               <ul className="mt-4 space-y-2">
-
                 {events.map((event, i) => (
-
-                  <li
-                    key={i}
-                    className="text-white/60 text-sm md:text-base"
-                  >
+                  <li key={i} className="text-white/60 text-sm md:text-base">
                     {event}
                   </li>
-
                 ))}
-
               </ul>
-
             </div>
-
           </SectionReveal>
-
         )}
-
       </div>
-
     </div>
-
   );
-
 }

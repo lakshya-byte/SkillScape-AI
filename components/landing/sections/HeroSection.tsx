@@ -1,15 +1,15 @@
 "use client";
 
-import HeroBackground from "@/components/hero/HeroBackground";
-import HeroContent from "@/components/hero/HeroContent";
+import HeroBackground from "@/components/landing/hero/HeroBackground";
+import HeroContent from "@/components/landing/hero/HeroContent";
 
 export default function HeroSection() {
   return (
     <section
       className="
         relative
-        w-full
-        h-[100vh]
+        w-screen
+        h-screen
 
         flex
         items-center
@@ -25,7 +25,6 @@ export default function HeroSection() {
 
       {/* Content Layer */}
       <HeroContent />
-     
     </section>
   );
 }

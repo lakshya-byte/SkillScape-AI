@@ -99,12 +99,11 @@ function HeroBackground() {
               absolute inset-0
               w-full h-full
               transform-gpu
-              scale-[0.85]
               will-change-transform
             "
         >
           <Spline
-            scene="https://prod.spline.design/epRk5J3rZZYI1UHE/scene.splinecode"
+            scene="https://prod.spline.design/q7NUhUBbLZDl0m1s/scene.splinecode"
             className="w-full h-full"
           />
         </div>

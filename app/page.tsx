@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import LazyMount from "@/components/utils/LazyMount";
+import LazyMount from "@/components/landing/utils/LazyMount";
 
 /*
 ========================================
@@ -10,48 +10,51 @@ Dynamic imports (Bundle-level optimization)
 */
 
 // Hero loads immediately (LCP element)
-const HeroSection = dynamic(() => import("@/components/sections/HeroSection"), {
-  ssr: false,
-  loading: () => <div className="h-screen w-full bg-black" />,
-});
+const HeroSection = dynamic(
+  () => import("@/components/landing/sections/HeroSection"),
+  {
+    ssr: false,
+    loading: () => <div className="h-screen w-full bg-black" />,
+  },
+);
 
 // All other heavy sections load only when needed
 const IdentitySection = dynamic(
-  () => import("@/components/sections/IdentitySection"),
+  () => import("@/components/landing/sections/IdentitySection"),
   {
     ssr: false,
   },
 );
 
 const AboutSection = dynamic(
-  () => import("@/components/sections/AboutSection"),
+  () => import("@/components/landing/sections/AboutSection"),
   {
     ssr: false,
   },
 );
 
 const PillarsSection = dynamic(
-  () => import("@/components/sections/PillarsSection"),
+  () => import("@/components/landing/sections/PillarsSection"),
   {
     ssr: false,
   },
 );
 
 const RecruitmentTimelineSection = dynamic(
-  () => import("@/components/sections/RecruitmentTimelineSection"),
+  () => import("@/components/landing/sections/RecruitmentTimelineSection"),
   {
     ssr: false,
   },
 );
 
 const WhyJoinNibble = dynamic(
-  () => import("@/components/sections/WhyJoinNibble"),
+  () => import("@/components/landing/sections/WhyJoinNibble"),
   {
     ssr: false,
   },
 );
 
-const JoinCTA = dynamic(() => import("@/components/sections/JoinCTA"), {
+const JoinCTA = dynamic(() => import("@/components/landing/sections/JoinCTA"), {
   ssr: false,
 });
 

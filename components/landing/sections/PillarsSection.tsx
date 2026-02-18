@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import GridBackground from "@/components/ui/GridBackground";
-import SectionReveal from "@/components/ui/SectionReveal";
-import PillarCard from "@/components/pillars/PillarCard";
+import GridBackground from "@/components/landing/ui/GridBackground";
+import SectionReveal from "@/components/landing/ui/SectionReveal";
+import PillarCard from "@/components/landing/pillars/PillarCard";
 
 const pillars = [
   {

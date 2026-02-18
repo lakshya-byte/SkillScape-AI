@@ -5,9 +5,9 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-import GridBackground from "@/components/ui/GridBackground";
-import SectionReveal from "@/components/ui/SectionReveal";
-import TimelineItem from "@/components/timeline/TimelineItem";
+import GridBackground from "@/components/landing/ui/GridBackground";
+import SectionReveal from "@/components/landing/ui/SectionReveal";
+import TimelineItem from "@/components/landing/timeline/TimelineItem";
 
 gsap.registerPlugin(ScrollTrigger);
 
