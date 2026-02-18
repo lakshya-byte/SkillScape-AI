@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 
@@ -39,9 +39,12 @@ export default function Unique() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.1 }
     );
+
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
@@ -49,145 +52,88 @@ export default function Unique() {
   return (
     <section
       ref={ref}
-      style={{
-        background: "#0a0a0f",
-        padding: "100px 24px",
-        position: "relative",
-        overflow: "hidden",
-      }}
+      className="relative bg-[#0a0a0f] py-24 px-6 overflow-hidden"
     >
-      {/* Glow */}
-      <div style={{
-        position: "absolute", top: "40%", left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: "700px", height: "400px",
-        background: "radial-gradient(ellipse, rgba(124,58,237,0.09) 0%, transparent 65%)",
-        pointerEvents: "none",
-      }} />
+      {/* Glow Background */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[radial-gradient(ellipse_at_center,_rgba(124,58,237,0.09),transparent_65%)] pointer-events-none" />
 
-      <div style={{ maxWidth: "900px", margin: "0 auto", position: "relative" }}>
+      <div className="max-w-5xl mx-auto relative">
+
         {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "72px" }}>
-          <span style={{
-            display: "inline-flex", alignItems: "center", gap: "8px",
-            background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.3)",
-            borderRadius: "20px", padding: "5px 14px",
-            color: "#a78bfa", fontSize: "11px", fontWeight: 600,
-            letterSpacing: "0.12em", textTransform: "uppercase" as const, marginBottom: "20px",
-          }}>
-            <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#8b5cf6" }} />
+        <div className="text-center mb-20">
+          <span className="inline-flex items-center gap-2 bg-purple-500/15 border border-purple-500/30 rounded-full px-4 py-1 text-xs font-semibold tracking-widest uppercase text-purple-400 mb-6">
+            <span className="w-1.5 h-1.5 bg-purple-500 rounded-full" />
             What Makes Us Different
           </span>
-          <h2 style={{
-            color: "#ffffff", fontSize: "clamp(2rem, 4vw, 3rem)",
-            fontWeight: 700, fontFamily: "'Sora','Segoe UI',sans-serif",
-            margin: "0 0 16px",
-          }}>
+
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">
             The SkillScape Advantage
           </h2>
-          <p style={{
-            color: "#9ca3af", fontSize: "1rem", maxWidth: "480px",
-            margin: "0 auto", lineHeight: 1.65,
-          }}>
-            We didn't just build a better resume tool. We reimagined the entire model of how talent is understood.
+
+          <p className="text-gray-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+            We didn’t just build a better resume tool. We reimagined the entire model of how talent is understood.
           </p>
         </div>
 
         {/* Column Labels */}
-        <div style={{
-          display: "grid", gridTemplateColumns: "1fr 140px 1fr",
-          gap: "12px", marginBottom: "10px", padding: "0 4px",
-        }}>
-          <div style={{ color: "#4b5563", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+        <div className="hidden md:grid grid-cols-[1fr_140px_1fr] gap-3 mb-3 px-1">
+          <div className="text-gray-600 text-xs font-semibold tracking-wider uppercase">
             Old Way
           </div>
           <div />
-          <div style={{ color: "#8b5cf6", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", textAlign: "right" }}>
+          <div className="text-purple-400 text-xs font-semibold tracking-wider uppercase text-right">
             SkillScape
           </div>
         </div>
 
         {/* Rows */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+        <div className="flex flex-col gap-4">
           {differentiators.map((row, i) => (
             <div
               key={i}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 140px 1fr",
-                gap: "12px",
-                alignItems: "center",
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.06)",
-                borderRadius: "12px",
-                padding: "18px 20px",
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(24px)",
-                transition: `all 0.5s ease ${i * 0.08}s`,
-              }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.border = "1px solid rgba(139,92,246,0.35)";
-                el.style.background = "rgba(139,92,246,0.05)";
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.border = "1px solid rgba(255,255,255,0.06)";
-                el.style.background = "rgba(255,255,255,0.02)";
-              }}
+              className={`grid md:grid-cols-[1fr_140px_1fr] gap-4 items-center bg-white/[0.02] border border-white/10 rounded-xl p-6 transition-all duration-500 hover:border-purple-500/40 hover:bg-purple-500/5 ${
+                visible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-6"
+              }`}
+              style={{ transitionDelay: `${i * 0.1}s` }}
             >
               {/* Left */}
               <div>
-                <div style={{
-                  color: "#4b5563", fontWeight: 600, fontSize: "0.9rem",
-                  textDecoration: "line-through", marginBottom: "3px",
-                }}>
+                <div className="text-gray-500 font-semibold text-sm line-through mb-1">
                   {row.left}
                 </div>
-                <div style={{ color: "#374151", fontSize: "0.78rem" }}>{row.leftDesc}</div>
+                <div className="text-gray-600 text-xs">
+                  {row.leftDesc}
+                </div>
               </div>
 
-              {/* Center */}
-              <div style={{ textAlign: "center" }}>
-                <span style={{
-                  display: "inline-block",
-                  background: "rgba(139,92,246,0.1)",
-                  border: "1px solid rgba(139,92,246,0.22)",
-                  borderRadius: "20px", padding: "5px 10px",
-                  color: "#a78bfa", fontSize: "10px", fontWeight: 600,
-                  letterSpacing: "0.04em",
-                }}>
+              {/* Center Topic */}
+              <div className="text-center">
+                <span className="inline-block bg-purple-500/15 border border-purple-500/30 rounded-full px-3 py-1 text-xs text-purple-300 font-semibold">
                   {row.topic}
                 </span>
               </div>
 
               {/* Right */}
-              <div style={{ textAlign: "right" }}>
-                <div style={{
-                  fontWeight: 700, fontSize: "0.9rem", marginBottom: "3px",
-                  background: "linear-gradient(135deg, #8b5cf6, #c084fc)",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                }}>
+              <div className="text-right">
+                <div className="font-bold text-sm mb-1 bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent">
                   {row.right}
                 </div>
-                <div style={{ color: "#9ca3af", fontSize: "0.78rem" }}>{row.rightDesc}</div>
+                <div className="text-gray-400 text-xs">
+                  {row.rightDesc}
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Bottom pill */}
-        <div style={{ textAlign: "center", marginTop: "48px" }}>
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: "10px",
-            background: "rgba(139,92,246,0.08)",
-            border: "1px solid rgba(139,92,246,0.2)",
-            borderRadius: "12px", padding: "12px 24px",
-            color: "#d1d5db", fontSize: "0.875rem",
-          }}>
-            <span style={{ color: "#8b5cf6" }}>✦</span>
+        {/* Bottom Pill */}
+        <div className="text-center mt-16">
+          <div className="inline-flex items-center gap-3 bg-purple-500/10 border border-purple-500/25 rounded-xl px-8 py-4 text-gray-300 text-sm">
+            <span className="text-purple-400">✦</span>
             Built on graph theory, verified by AI, designed for humans.
-            <span style={{ color: "#8b5cf6" }}>✦</span>
+            <span className="text-purple-400">✦</span>
           </div>
         </div>
       </div>
