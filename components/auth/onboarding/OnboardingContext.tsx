@@ -1,9 +1,28 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  ReactNode,
+} from "react";
+import { useRouter, usePathname } from "next/navigation";
 
-// 1. Define the Shape of the Data
-// This ensures all components know exactly what "User Data" looks like.
+// ─── Route Order ────────────────────────────────────────────────
+const ONBOARDING_ROUTES = [
+  "/onboarding/welcome",
+  "/onboarding/identity",
+  "/onboarding/avatar",
+  "/onboarding/connections",
+  "/onboarding/skills",
+  "/onboarding/loader",
+  "/onboarding/complete",
+] as const;
+
+export const TOTAL_STEPS = ONBOARDING_ROUTES.length;
+
+// ─── Types ──────────────────────────────────────────────────────
 type UserData = {
   name: string;
   email: string;
@@ -12,70 +31,95 @@ type UserData = {
   skills: string[];
 };
 
-// 2. Define the Context Interface
-// This lists everything available to the child components.
 type OnboardingContextType = {
   step: number;
+  totalSteps: number;
   userData: UserData;
   setStep: (step: number) => void;
   updateUserData: (data: Partial<UserData>) => void;
   nextStep: () => void;
   prevStep: () => void;
-  isStepValid: () => boolean; // Helper to check if current step is complete
+  isStepValid: () => boolean;
 };
 
-const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
+const OnboardingContext = createContext<OnboardingContextType | undefined>(
+  undefined,
+);
 
-// 3. The Provider Component
-// This wraps the entire app and provides the state.
+// ─── Provider ───────────────────────────────────────────────────
 export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [step, setStep] = useState(0); // Start at Step 0 (Welcome)
-  
-  // Initialize empty state
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Derive current step index from the URL
+  const step = useMemo(() => {
+    const index = ONBOARDING_ROUTES.indexOf(
+      pathname as (typeof ONBOARDING_ROUTES)[number],
+    );
+    return index >= 0 ? index : 0;
+  }, [pathname]);
+
   const [userData, setUserData] = useState<UserData>({
-    name: '',
-    email: '',
-    org: '',
+    name: "",
+    email: "",
+    org: "",
     avatarId: null,
     skills: [],
   });
 
-  // Helper to update specific fields without overwriting the whole object
   const updateUserData = (data: Partial<UserData>) => {
-    setUserData(prev => ({ ...prev, ...data }));
+    setUserData((prev) => ({ ...prev, ...data }));
   };
 
-  // Navigation Logic
-  const nextStep = () => setStep(prev => Math.min(prev + 1, 5)); // Cap at max steps
-  const prevStep = () => setStep(prev => Math.max(prev - 1, 0)); // Cap at 0
+  // Route-based navigation
+  const nextStep = () => {
+    const nextIndex = Math.min(step + 1, ONBOARDING_ROUTES.length - 1);
+    router.push(ONBOARDING_ROUTES[nextIndex]);
+  };
 
-  // Validation Logic (Optional helper to disable "Next" buttons)
+  const prevStep = () => {
+    const prevIndex = Math.max(step - 1, 0);
+    router.push(ONBOARDING_ROUTES[prevIndex]);
+  };
+
+  // Jump to a specific step by index
+  const setStep = (target: number) => {
+    const clamped = Math.max(0, Math.min(target, ONBOARDING_ROUTES.length - 1));
+    router.push(ONBOARDING_ROUTES[clamped]);
+  };
+
   const isStepValid = () => {
     switch (step) {
-      case 1: return !!userData.name && !!userData.email; // Identity Step
-      case 2: return !!userData.avatarId; // Avatar Step
-      case 3: return userData.skills.length > 0; // Skills Step
-      default: return true;
+      case 1:
+        return !!userData.name && !!userData.email;
+      case 2:
+        return !!userData.avatarId;
+      case 4:
+        return userData.skills.length > 0;
+      default:
+        return true;
     }
   };
 
   return (
-    <OnboardingContext.Provider value={{ 
-      step, 
-      userData, 
-      setStep, 
-      updateUserData, 
-      nextStep, 
-      prevStep,
-      isStepValid 
-    }}>
+    <OnboardingContext.Provider
+      value={{
+        step,
+        totalSteps: TOTAL_STEPS,
+        userData,
+        setStep,
+        updateUserData,
+        nextStep,
+        prevStep,
+        isStepValid,
+      }}
+    >
       {children}
     </OnboardingContext.Provider>
   );
 }
 
-// 4. Custom Hook
-// This makes using the context easier: `const { step } = useOnboarding();`
+// ─── Hook ───────────────────────────────────────────────────────
 export const useOnboarding = () => {
   const context = useContext(OnboardingContext);
   if (!context) {

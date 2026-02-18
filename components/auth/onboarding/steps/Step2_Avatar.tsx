@@ -123,7 +123,7 @@ export default function Step2_Avatar() {
       <div className="text-center mb-12">
         {/* Progress Bar (Step 3 of 6) */}
         <div className="header-element w-full max-w-2xl mx-auto mb-8 flex items-center gap-4">
-          <div className="h-1 flex-grow bg-white/5 rounded-full overflow-hidden">
+          <div className="h-1 flex-grow bg-white/5 rounded-full ">
             <motion.div
               className="h-full bg-gradient-to-r from-purple-500 to-indigo-500"
               initial={{ width: "20%" }}

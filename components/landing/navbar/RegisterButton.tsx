@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import router from 'next/router';
 
 interface RegisterButtonProps {
   isScrolled: boolean;
@@ -8,7 +10,7 @@ interface RegisterButtonProps {
 const RegisterButton: React.FC<RegisterButtonProps> = ({ isScrolled }) => {
   return (
     <Link
-      href="/register"
+      href="/onboarding/welcome"
       className={`
         group relative flex items-center justify-center overflow-hidden rounded-full 
         transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)]
@@ -47,8 +49,9 @@ const RegisterButton: React.FC<RegisterButtonProps> = ({ isScrolled }) => {
           transition-all duration-300
           group-hover:text-blue-50
         `}
+        // onClick={() => router.push('/onboarding/welcome')}
       >
-        Join NCS
+       onBoard
       </span>
 
       {/* OPTIONAL: Right Arrow Icon (Fades in on hover)
