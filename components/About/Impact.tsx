@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { GraduationCap, Briefcase, Search } from "lucide-react";
 
 const stats = [
   { value: "50k+", label: "Active Nodes" },
@@ -14,16 +15,19 @@ const cards = [
     title: "For Students",
     desc: "Visualize your learning path. Discover how skills connect and build a personalized roadmap from novice to expert using our interactive 3D graph.",
     link: "Start Learning →",
+    icon: GraduationCap,
   },
   {
     title: "For Professionals",
     desc: "Map your career trajectory. Identify skill gaps, find adjacent technologies, and validate your expertise against industry standards in real-time.",
     link: "Analyze Career →",
+    icon: Briefcase,
   },
   {
     title: "For Recruiters",
     desc: "Discover verified talent. Move beyond keyword matching with semantic understanding of candidate capabilities and technical depth.",
     link: "Find Talent →",
+    icon: Search,
   },
 ];
 
@@ -58,9 +62,8 @@ export default function Impact() {
 
         {/* Badge */}
         <div
-          className={`flex justify-center mb-8 transition-all duration-700 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
+          className={`flex justify-center mb-8 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
         >
           <span className="flex items-center gap-2 bg-purple-500/15 border border-purple-500/30 rounded-full px-4 py-1 text-xs font-semibold tracking-widest uppercase text-purple-400">
             <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
@@ -70,9 +73,8 @@ export default function Impact() {
 
         {/* Heading */}
         <div
-          className={`text-center mb-6 transition-all duration-700 delay-100 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-          }`}
+          className={`text-center mb-6 transition-all duration-700 delay-100 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
         >
           <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
             Redefining <br />
@@ -84,9 +86,8 @@ export default function Impact() {
 
         {/* Subheading */}
         <p
-          className={`text-center text-gray-400 max-w-xl mx-auto mb-16 text-sm md:text-base leading-relaxed transition-all duration-700 delay-200 ${
-            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
+          className={`text-center text-gray-400 max-w-xl mx-auto mb-16 text-sm md:text-base leading-relaxed transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
         >
           Connecting the dots between potential and mastery through our immersive 3D knowledge graph technology. We don’t just map skills — we reveal the future of work.
         </p>
@@ -96,15 +97,14 @@ export default function Impact() {
           {cards.map((card, i) => (
             <div
               key={i}
-              className={`bg-white/[0.03] border border-white/10 rounded-2xl p-8 transition-all duration-700 hover:-translate-y-2 hover:border-purple-500/40 hover:bg-purple-500/5 ${
-                visible
+              className={`bg-white/[0.03] border border-white/10 rounded-2xl p-8 transition-all duration-700 hover:-translate-y-2 hover:border-purple-500/40 hover:bg-purple-500/5 ${visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10"
-              }`}
+                }`}
               style={{ transitionDelay: `${0.3 + i * 0.1}s` }}
             >
               <div className="w-12 h-12 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center mb-6 text-purple-400 font-bold">
-                ★
+                <card.icon size={24} />
               </div>
 
               <h3 className="text-lg font-semibold mb-3 text-white">
@@ -132,11 +132,10 @@ export default function Impact() {
           {stats.map((s, i) => (
             <div
               key={i}
-              className={`transition-all duration-700 ${
-                visible
+              className={`transition-all duration-700 ${visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-5"
-              }`}
+                }`}
               style={{ transitionDelay: `${0.6 + i * 0.08}s` }}
             >
               <div className="text-2xl md:text-3xl font-extrabold text-white">

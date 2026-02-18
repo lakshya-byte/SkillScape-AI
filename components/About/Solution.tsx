@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Link, Cpu, ShieldCheck, Compass } from "lucide-react";
 
 const steps = [
   {
@@ -8,24 +9,28 @@ const steps = [
     title: "Connect Your Sources",
     desc: "Link your GitHub, LinkedIn, certifications, and project repos. SkillScape pulls everything into one unified pipeline.",
     tag: "Ingestion",
+    icon: Link,
   },
   {
     step: "02",
     title: "AI Builds Your Graph",
     desc: "Our models analyze code quality, contribution patterns, and skill co-occurrence to construct your capability graph.",
     tag: "Analysis",
+    icon: Cpu,
   },
   {
     step: "03",
     title: "Verify & Validate",
     desc: "Deep code analysis and graph theory verify real-world skills — no self-reported bias.",
     tag: "Verification",
+    icon: ShieldCheck,
   },
   {
     step: "04",
     title: "Discover & Grow",
     desc: "Unlock your personalized career roadmap — see gaps, find opportunities, and connect with teams.",
     tag: "Growth",
+    icon: Compass,
   },
 ];
 
@@ -79,16 +84,15 @@ export default function Solution() {
           {steps.map((s, i) => (
             <div
               key={i}
-              className={`relative bg-white/[0.03] border border-white/10 rounded-2xl p-8 transition-all duration-700 hover:-translate-y-2 hover:border-purple-500/40 hover:bg-purple-500/5 ${
-                visible
+              className={`relative bg-white/[0.03] border border-white/10 rounded-2xl p-8 transition-all duration-700 hover:-translate-y-2 hover:border-purple-500/40 hover:bg-purple-500/5 ${visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-10"
-              }`}
+                }`}
               style={{ transitionDelay: `${i * 0.15}s` }}
             >
               {/* Step Number Badge */}
               <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-br from-purple-500/30 to-purple-700/20 border border-purple-500/40 text-purple-300 font-bold text-sm mb-4">
-                {s.step}
+                <s.icon size={20} />
               </div>
 
               {/* Tag */}

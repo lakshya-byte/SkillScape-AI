@@ -6,7 +6,7 @@ import Impact from "@/components/About/Impact";
 
 export default function Page() {
   return (
-    <main className="bg-background-dark text-white min-h-screen mt-10">
+    <main className="bg-background-dark text-white min-h-screen">
       <Problem />
       <Importance />
       <Solution />

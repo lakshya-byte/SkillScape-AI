@@ -2,15 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { Database, ZapOff, Eye, Sparkles, ShieldCheck, Map } from "lucide-react";
 
 const problems = [
   {
     title: "Fragmented Data",
     desc: "Skills hidden in unstructured silos across incompatible platforms.",
+    icon: Database,
   },
   {
     title: "Lost Opportunities",
     desc: "True potential goes unnoticed without a unified graph.",
+    icon: ZapOff,
   },
 ];
 
@@ -18,18 +21,22 @@ const whyCards = [
   {
     title: "See the Unseen",
     desc: "Visualizing hidden connections between disparate technical skills to reveal latent potential.",
+    icon: Eye,
   },
   {
     title: "AI-Driven Discovery",
     desc: "Finding talent based on actual capability graphs and project impact.",
+    icon: Sparkles,
   },
   {
     title: "Trustless Verification",
     desc: "Validating skills through deep code analysis and graph theory.",
+    icon: ShieldCheck,
   },
   {
     title: "Career Cartography",
     desc: "Mapping the clear path to your next level with personalized roadmaps.",
+    icon: Map,
   },
 ];
 
@@ -52,23 +59,22 @@ export default function Problem() {
   return (
     <section
       ref={ref}
-      className="relative bg-[#0a0a0f] py-24 px-6 overflow-hidden"
+      className="relative pb-24 px-6 overflow-hidden "
     >
       {/* Glow background */}
-      <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-[radial-gradient(circle,_rgba(139,92,246,0.09),transparent_65%)] pointer-events-none" />
+      <div className="absolute -top-20 -right-20 w-[500px] h-[500px] bg-[radial-gradient(circle,_rgba(139,92,246,0.09),transparent_65%)] pointer-events-none " />
 
       <div className="max-w-6xl mx-auto relative">
 
         {/* ───────── HERO SECTION ───────── */}
-        <div className="grid md:grid-cols-2 gap-16 items-center mb-24">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
 
           {/* LEFT */}
           <div
-            className={`transition-all duration-700 ${
-              visible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 -translate-x-6"
-            }`}
+            className={`transition-all duration-700 ${visible
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 -translate-x-6"
+              }`}
           >
             {/* Badge */}
             <span className="inline-flex items-center gap-2 bg-purple-500/15 border border-purple-500/30 rounded-full px-4 py-1 text-xs font-semibold tracking-widest uppercase text-purple-400 mb-6">
@@ -99,14 +105,15 @@ export default function Problem() {
               {problems.map((p, i) => (
                 <div
                   key={i}
-                  className={`bg-white/[0.03] border border-white/10 rounded-xl p-5 transition-all duration-500 hover:border-purple-500/40 hover:bg-purple-500/5 ${
-                    visible
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                  }`}
+                  className={`bg-white/[0.03] border border-white/10 rounded-xl p-5 transition-all duration-500 hover:border-purple-500/40 hover:bg-purple-500/5 ${visible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                    }`}
                   style={{ transitionDelay: `${0.3 + i * 0.1}s` }}
                 >
-                  <div className="w-10 h-10 bg-purple-500/15 rounded-lg mb-4" />
+                  <div className="w-10 h-10 bg-purple-500/15 rounded-lg mb-4 flex items-center justify-center text-purple-400">
+                    <p.icon size={20} />
+                  </div>
 
                   <h4 className="text-white font-semibold text-sm mb-2">
                     {p.title}
@@ -121,11 +128,10 @@ export default function Problem() {
 
           {/* RIGHT - Graph */}
           <div
-            className={`transition-all duration-700 delay-200 ${
-              visible
-                ? "opacity-100 translate-x-0"
-                : "opacity-0 translate-x-6"
-            }`}
+            className={`transition-all duration-700 delay-200 ${visible
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 translate-x-6"
+              }`}
           >
             <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-white/10 bg-black/30">
               <Image
@@ -139,7 +145,7 @@ export default function Problem() {
         </div>
 
         {/* ───────── WHY SKILLSCAPE ───────── */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 pt-10">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
             Why SkillScape Matters
           </h2>
@@ -153,14 +159,15 @@ export default function Problem() {
           {whyCards.map((card, i) => (
             <div
               key={i}
-              className={`bg-white/[0.03] border border-white/10 rounded-xl p-6 transition-all duration-500 hover:-translate-y-1 hover:border-purple-500/40 hover:bg-purple-500/5 ${
-                visible
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-6"
-              }`}
+              className={`bg-white/[0.03] border border-white/10 rounded-xl p-6 transition-all duration-500 hover:-translate-y-1 hover:border-purple-500/40 hover:bg-purple-500/5 ${visible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-6"
+                }`}
               style={{ transitionDelay: `${0.4 + i * 0.1}s` }}
             >
-              <div className="w-10 h-10 bg-purple-500/15 rounded-lg mb-4" />
+              <div className="w-10 h-10 bg-purple-500/15 rounded-lg mb-4 flex items-center justify-center text-purple-400">
+                <card.icon size={20} />
+              </div>
 
               <h4 className="text-white font-semibold text-sm mb-2">
                 {card.title}

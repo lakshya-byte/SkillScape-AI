@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Sparkles, Zap } from "lucide-react";
 
 const differentiators = [
   {
@@ -62,7 +63,7 @@ export default function Unique() {
         {/* Header */}
         <div className="text-center mb-20">
           <span className="inline-flex items-center gap-2 bg-purple-500/15 border border-purple-500/30 rounded-full px-4 py-1 text-xs font-semibold tracking-widest uppercase text-purple-400 mb-6">
-            <span className="w-1.5 h-1.5 bg-purple-500 rounded-full" />
+            <Sparkles size={14} className="text-purple-400" />
             What Makes Us Different
           </span>
 
@@ -91,11 +92,10 @@ export default function Unique() {
           {differentiators.map((row, i) => (
             <div
               key={i}
-              className={`grid md:grid-cols-[1fr_140px_1fr] gap-4 items-center bg-white/[0.02] border border-white/10 rounded-xl p-6 transition-all duration-500 hover:border-purple-500/40 hover:bg-purple-500/5 ${
-                visible
+              className={`grid md:grid-cols-[1fr_140px_1fr] gap-4 items-center bg-white/[0.02] border border-white/10 rounded-xl p-6 transition-all duration-500 hover:border-purple-500/40 hover:bg-purple-500/5 ${visible
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 translate-y-6"
-              }`}
+                }`}
               style={{ transitionDelay: `${i * 0.1}s` }}
             >
               {/* Left */}
@@ -131,9 +131,9 @@ export default function Unique() {
         {/* Bottom Pill */}
         <div className="text-center mt-16">
           <div className="inline-flex items-center gap-3 bg-purple-500/10 border border-purple-500/25 rounded-xl px-8 py-4 text-gray-300 text-sm">
-            <span className="text-purple-400">✦</span>
+            <Zap size={16} className="text-purple-400 animate-pulse" />
             Built on graph theory, verified by AI, designed for humans.
-            <span className="text-purple-400">✦</span>
+            <Zap size={16} className="text-purple-400 animate-pulse" />
           </div>
         </div>
       </div>
