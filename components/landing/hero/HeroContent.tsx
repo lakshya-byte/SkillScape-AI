@@ -59,7 +59,7 @@ export default function HeroContent() {
         "
       >
         <span className="text-[10px] md:text-xs font-semibold tracking-[0.3em] uppercase text-white/80">
-          SkillScape AI
+          Valion AI
         </span>
       </div>
 
