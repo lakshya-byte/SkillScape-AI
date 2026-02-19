@@ -3,34 +3,34 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js"
 
 const generateAccessAndRefreshTokens = async (userId) => {
-	try {
-		const user = await User.findById(userId);
-		const accessToken = user.generateAccessToken();
-		const refreshToken = user.generateRefreshToken();
+    try {
+        const user = await User.findById(userId);
+        const accessToken = user.generateAccessToken();
+        const refreshToken = user.generateRefreshToken();
 
-		return { accessToken, refreshToken };
-	} catch (error) {
-		throw new ApiError(500, "Something went wrong while generating tokens");
-	}
+        return { accessToken, refreshToken };
+    } catch (error) {
+        throw new ApiError(500, "Something went wrong while generating tokens");
+    }
 };
 
-const register = async (req,res,next) => {
+const register = async (req, res, next) => {
     try {
         // Based on:
         // const profileData = {
         //     name: "Lakshya Dubey",
         //     email: "lakshya@example.com",
         //     institution: "JSS Academy of Technical Education",
-          
+
         //     avatar: "/avatars/avatar-1.png",
-          
+
         //     links: {
         //       github: "https://github.com/lakshya-byte",
         //       linkedin: "...",
         //       leetcode: "...",
         //       behance: "...",
         //     },
-          
+
         //     stats: {
         //       level: 12,
         //       xp: 2450,
@@ -39,13 +39,13 @@ const register = async (req,res,next) => {
         //       skillScore: 87,
         //       badges: ["AI Engineer", "Frontend Master"],
         //     },
-          
+
         //     skills: [
         //       { name: "Next.js", level: 90 },
         //       { name: "Three.js", level: 80 },
         //       { name: "AI/ML", level: 75 },
         //     ],
-          
+
         //     projects: [
         //       {
         //         name: "SkillScape AI",
@@ -53,8 +53,8 @@ const register = async (req,res,next) => {
         //       },
         //     ],
         //   };
-        const {name,email,password,institute,avatar,links} = req.body;
-        if(!name || !email || !password){
+        const { name, email, password, institute, avatar, links } = req.body;
+        if (!name || !email || !password) {
             return res
                 .status(400)
                 .json(new ApiError(400, "Enter mandatory Fields"));
@@ -73,11 +73,11 @@ const register = async (req,res,next) => {
             password,
             institute,
             avatar,
-            platforms:{
-                github:{
+            platforms: {
+                github: {
                     url: links.github || ""
                 },
-                behance:links.behance || "",
+                behance: links.behance || "",
                 linkedin: links.linkedin || "",
                 leetcode: links.leetcode || ""
             }
@@ -91,9 +91,9 @@ const register = async (req,res,next) => {
         );
 
         const options = {
-            secure: true,
+            secure: false,
             httpOnly: true,
-            sameSite: "None",
+            sameSite: "lax",
             maxAge: 24 * 60 * 60 * 1000
         };
 
@@ -104,8 +104,8 @@ const register = async (req,res,next) => {
             .json(
                 new ApiResponse(
                     201,
-                    { 
-                        user: safeUser , 
+                    {
+                        user: safeUser,
                         accessToken,
                         refreshToken
                     },
@@ -118,8 +118,8 @@ const register = async (req,res,next) => {
     }
 }
 
-const login = async (req,res) => {
-    try{
+const login = async (req, res) => {
+    try {
         const { email, password } = req.body;
         if (!email || !password)
             return res.status(400).json(new ApiError(400, "All fields are required"));
@@ -140,11 +140,11 @@ const login = async (req,res) => {
         const loggedInUser = await User.findById(user._id).select(
             "-password -refreshToken"
         );
-        
+
         const options = {
-            secure: true,
+            secure: false,
             httpOnly: true,
-            sameSite: "None",
+            sameSite: "lax",
             maxAge: 24 * 60 * 60 * 1000,
         };
         return res
@@ -158,12 +158,12 @@ const login = async (req,res) => {
                     refreshToken
                 }, "User logged in successfully")
             );
-        }catch(err){
-            console.log(err)
-            return res
+    } catch (err) {
+        console.log(err)
+        return res
             .status(err.statusCode || 500)
             .json(new ApiError(err.statusCode || 500, err.message));
-        }
+    }
 }
 
 const logout = (async (req, res) => {
@@ -181,8 +181,8 @@ const logout = (async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true, 
-        sameSite: "none"
+        secure: false,
+        sameSite: "lax"
     };
 
     return res
