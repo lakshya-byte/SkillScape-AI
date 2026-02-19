@@ -64,6 +64,18 @@ export const resetPassword = async (email: string, otp: string, newPassword: str
     return response.data;
 };
 
+// ─── Leaderboard API Layer ──────────────────────────────────────
+
+export const getLeaderboard = async (page = 1, limit = 10) => {
+    const response = await api.get(`/leaderboard?page=${page}&limit=${limit}`);
+    return response.data;
+};
+
+export const getMyRank = async () => {
+    const response = await api.get("/leaderboard/me");
+    return response.data;
+};
+
 // ─── Agent Chat API Layer (SSE Streaming) ───────────────────────
 
 export async function* streamAgentChat(message: string, conversationId?: string) {

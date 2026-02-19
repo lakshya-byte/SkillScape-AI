@@ -31,7 +31,7 @@ const generateKnowledgeGraph = async (req, res) => {
 
         const graphData = await response.json();
         const raw = graphData.graphData.output;
-        const parsed = JSON.parse(raw);
+        const parsed = await JSON.parse(raw);
 
         user.skills = parsed["skills"] || [];
         await user.save();

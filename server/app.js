@@ -12,6 +12,7 @@ import notionRouter from "./routes/notion.route.js";
 import paymentRouter from "./routes/payment.route.js";
 import resetPasswordRouter from "./routes/resetPassword.route.js";
 import agentRouter from "./routes/agent.route.js";
+import leaderboardRouter from "./routes/leaderboard.route.js";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/agent", agentRouter);
 app.use("/github", githubRouter);
 app.use("/notion", notionRouter);
 app.use("/api/payments", paymentRouter);
+app.use("/api/leaderboard", leaderboardRouter);
 
 app.use(errorHandler);
 

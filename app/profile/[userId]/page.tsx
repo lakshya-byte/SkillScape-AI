@@ -13,12 +13,17 @@ import SkillsCard from "@/components/profile/SkillsCard";
 import ProjectsCard from "@/components/profile/ProjectsCard";
 import SocialLinksCard from "@/components/profile/SocialLinksCard";
 import AvatarDialog from "@/components/profile/AvatarDialog";
+import Sidebar from "@/components/Dasboard/Sidebar";
+import Navbar from "@/components/landing/navbar/Navbar";
 
 // --- API ---
 import { getMyself } from "@/lib/authApi";
 
 // --- Types ---
 import { UserProfile } from "@/components/profile/profileData";
+
+// --- Context ---
+import { UserProvider } from "@/contexts/UserContext";
 
 // Register GSAP Plugin
 if (typeof window !== "undefined") {
@@ -66,43 +71,43 @@ export default function ProfilePage({
           socials: [
             ...(u.platforms?.github?.url
               ? [
-                  {
-                    platform: "GitHub",
-                    icon: Github,
-                    url: u.platforms.github.url,
-                    username: u.platforms.github.url.split("/").pop() || "",
-                  },
-                ]
+                {
+                  platform: "GitHub",
+                  icon: Github,
+                  url: u.platforms.github.url,
+                  username: u.platforms.github.url.split("/").pop() || "",
+                },
+              ]
               : []),
             ...(u.platforms?.linkedin
               ? [
-                  {
-                    platform: "LinkedIn",
-                    icon: Linkedin,
-                    url: u.platforms.linkedin,
-                    username: "LinkedIn",
-                  },
-                ]
+                {
+                  platform: "LinkedIn",
+                  icon: Linkedin,
+                  url: u.platforms.linkedin,
+                  username: "LinkedIn",
+                },
+              ]
               : []),
             ...(u.platforms?.leetcode
               ? [
-                  {
-                    platform: "LeetCode",
-                    icon: Globe,
-                    url: u.platforms.leetcode,
-                    username: "LeetCode",
-                  },
-                ]
+                {
+                  platform: "LeetCode",
+                  icon: Globe,
+                  url: u.platforms.leetcode,
+                  username: "LeetCode",
+                },
+              ]
               : []),
             ...(u.platforms?.behance
               ? [
-                  {
-                    platform: "Behance",
-                    icon: Globe,
-                    url: u.platforms.behance,
-                    username: "Behance",
-                  },
-                ]
+                {
+                  platform: "Behance",
+                  icon: Globe,
+                  url: u.platforms.behance,
+                  username: "Behance",
+                },
+              ]
               : []),
           ],
         });
@@ -154,95 +159,129 @@ export default function ProfilePage({
   // --- Loading State ---
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#030014] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
-          <p className="text-xs text-slate-500 font-mono uppercase tracking-widest">
-            Loading Neural Profile...
-          </p>
+      <UserProvider>
+        <div className="min-h-screen flex" style={{ background: "#0a0a10" }}>
+          <Navbar />
+          <Sidebar />
+          <div className="flex-1 relative w-full">
+            <div className="relative z-10 md:ml-[210px] pt-24 flex items-center justify-center min-h-screen">
+              <div className="flex flex-col items-center gap-4">
+                <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+                <p className="text-xs text-slate-500 font-mono uppercase tracking-widest">
+                  Loading Neural Profile...
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
+      </UserProvider>
     );
   }
 
   // --- Error State ---
   if (error || !user) {
     return (
-      <main className="min-h-screen bg-[#030014] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-400 text-sm mb-2">
-            {error || "User not found"}
-          </p>
-          <p className="text-xs text-slate-600 font-mono">
-            PROFILE_FETCH_ERROR
-          </p>
+      <UserProvider>
+        <div className="min-h-screen flex" style={{ background: "#0a0a10" }}>
+          <Navbar />
+          <Sidebar />
+          <div className="flex-1 relative w-full">
+            <div className="relative z-10 md:ml-[210px] pt-24 flex items-center justify-center min-h-screen">
+              <div className="text-center">
+                <p className="text-red-400 text-sm mb-2">
+                  {error || "User not found"}
+                </p>
+                <p className="text-xs text-slate-600 font-mono">
+                  PROFILE_FETCH_ERROR
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
+      </UserProvider>
     );
   }
 
   return (
-    <main
-      ref={containerRef}
-      className="min-h-screen bg-[#030014] text-slate-200 font-sans selection:bg-indigo-500/30"
-    >
-      {/* 1. Global Cinematic Background */}
-      <ProfileBackground />
+    <UserProvider>
+      <div className="min-h-screen flex" style={{ background: "#0a0a10" }}>
+        {/* ── Navbar ─────────────────────────────────────────────────────── */}
+        <Navbar />
 
-      {/* 2. Main Content Container (no duplicate navbar) */}
-      <div className="relative z-10 pt-24 pb-20 px-4 md:px-8 max-w-[1600px] mx-auto">
-        {/* Grid System */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* A. Hero Section (Spans Full Width) */}
-          <div className="hero-section col-span-1 md:col-span-12 lg:col-span-8 h-full min-h-[400px]">
-            <ProfileHero
-              user={user}
-              isOwnProfile={true}
-              onAvatarChange={() => setAvatarDialogOpen(true)}
+        {/* ── Fixed Sidebar ─────────────────────────────────────────────── */}
+        <Sidebar />
+
+        {/* ── Main content — offset by sidebar width ─────────────────────── */}
+        <div className="flex-1 relative w-full">
+          <div
+            className="fixed top-0 left-0 md:left-[185px] right-0 h-[50vh] pointer-events-none z-0"
+            style={{ background: "radial-gradient(ellipse at 30% 0%, rgba(124,58,237,0.08) 0%, transparent 60%)" }}
+          />
+          <main
+            ref={containerRef}
+            className="relative z-10 md:ml-[210px] pt-24 md:pt-20 pb-7 text-slate-200 font-sans selection:bg-indigo-500/30"
+          >
+            {/* 1. Global Cinematic Background */}
+            <ProfileBackground />
+
+            {/* 2. Main Content Container */}
+            <div className="relative z-10 px-4 md:px-8 max-w-[1600px] mx-auto">
+              {/* Grid System */}
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                {/* A. Hero Section (Spans Full Width) */}
+                <div className="hero-section col-span-1 md:col-span-12 lg:col-span-8 h-full min-h-[400px]">
+                  <ProfileHero
+                    user={user}
+                    isOwnProfile={true}
+                    onAvatarChange={() => setAvatarDialogOpen(true)}
+                  />
+                </div>
+
+                {/* B. Gamification Card */}
+                <div className="hero-section col-span-1 md:col-span-12 lg:col-span-4 h-full">
+                  <GamificationCard
+                    level={user.level}
+                    xp={user.xp}
+                    nextLevelXp={user.nextLevelXp}
+                    rank="Singularity Seeker"
+                  />
+                </div>
+
+                {/* C. Skills Card */}
+                <div className="bento-item col-span-1 md:col-span-6 lg:col-span-4 h-[350px]">
+                  <SkillsCard />
+                </div>
+
+                {/* D. Projects Card */}
+                <div className="bento-item col-span-1 md:col-span-6 lg:col-span-4 h-[350px]">
+                  <ProjectsCard />
+                </div>
+
+                {/* E. Social Links Card */}
+                <div className="bento-item col-span-1 md:col-span-12 lg:col-span-4 h-[350px]">
+                  <SocialLinksCard />
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="ui-shell opacity-0 mt-20 text-center border-t border-white/5 pt-8">
+                <p className="text-xs text-slate-600 font-mono uppercase tracking-widest">
+                  SkillScape AI Intelligence Systems © 2024 • Neural Net v2.4.0
+                </p>
+              </div>
+            </div>
+
+            {/* Avatar Change Dialog */}
+            <AvatarDialog
+              isOpen={avatarDialogOpen}
+              currentAvatar={user.avatar}
+              onClose={() => setAvatarDialogOpen(false)}
+              onAvatarUpdated={handleAvatarUpdated}
             />
-          </div>
-
-          {/* B. Gamification Card */}
-          <div className="hero-section col-span-1 md:col-span-12 lg:col-span-4 h-full">
-            <GamificationCard
-              level={user.level}
-              xp={user.xp}
-              nextLevelXp={user.nextLevelXp}
-              rank="Singularity Seeker"
-            />
-          </div>
-
-          {/* C. Skills Card */}
-          <div className="bento-item col-span-1 md:col-span-6 lg:col-span-4 h-[350px]">
-            <SkillsCard />
-          </div>
-
-          {/* D. Projects Card */}
-          <div className="bento-item col-span-1 md:col-span-6 lg:col-span-4 h-[350px]">
-            <ProjectsCard />
-          </div>
-
-          {/* E. Social Links Card */}
-          <div className="bento-item col-span-1 md:col-span-12 lg:col-span-4 h-[350px]">
-            <SocialLinksCard />
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="ui-shell opacity-0 mt-20 text-center border-t border-white/5 pt-8">
-          <p className="text-xs text-slate-600 font-mono uppercase tracking-widest">
-            SkillScape AI Intelligence Systems © 2024 • Neural Net v2.4.0
-          </p>
+          </main>
         </div>
       </div>
-
-      {/* Avatar Change Dialog */}
-      <AvatarDialog
-        isOpen={avatarDialogOpen}
-        currentAvatar={user.avatar}
-        onClose={() => setAvatarDialogOpen(false)}
-        onAvatarUpdated={handleAvatarUpdated}
-      />
-    </main>
+    </UserProvider>
   );
 }
+
