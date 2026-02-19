@@ -1,18 +1,24 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Camera, RefreshCw } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Camera, RefreshCw } from "lucide-react";
 
 interface AvatarSelectorProps {
   src: string;
   alt: string;
   isEditable?: boolean;
+  onEditClick?: () => void;
 }
 
-export default function AvatarSelector({ src, alt, isEditable = false }: AvatarSelectorProps) {
+export default function AvatarSelector({
+  src,
+  alt,
+  isEditable = false,
+  onEditClick,
+}: AvatarSelectorProps) {
   return (
-    <motion.div 
+    <motion.div
       className="relative group cursor-pointer z-20"
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
@@ -21,21 +27,24 @@ export default function AvatarSelector({ src, alt, isEditable = false }: AvatarS
     >
       {/* 1. Holographic Rotating Ring (The "AI Processing" look) */}
       <div className="absolute -inset-[3px] rounded-full bg-gradient-to-tr from-indigo-500 via-purple-500 to-transparent opacity-60 blur-sm group-hover:opacity-100 transition-opacity duration-500 animate-spin-slow" />
-      
+
       {/* 2. Static Glow Layer */}
       <div className="absolute -inset-[1px] rounded-full bg-gradient-to-b from-white/20 to-transparent opacity-50" />
 
       {/* 3. The Avatar Image */}
       <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full p-[4px] bg-[#0A0A0F] overflow-hidden shadow-2xl">
-        <img 
-          src={src} 
-          alt={alt} 
-          className="w-full h-full rounded-full object-cover transform transition-transform duration-700 group-hover:scale-110" 
+        <img
+          src={src}
+          alt={alt}
+          className="w-full h-full rounded-full object-cover transform transition-transform duration-700 group-hover:scale-110"
         />
-        
+
         {/* Optional: Edit Overlay (if editable) */}
         {isEditable && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]">
+          <div
+            className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px]"
+            onClick={onEditClick}
+          >
             <Camera className="text-white w-8 h-8 drop-shadow-lg" />
           </div>
         )}
@@ -50,14 +59,18 @@ export default function AvatarSelector({ src, alt, isEditable = false }: AvatarS
       </div>
 
       {/* 5. Rank Badge (Floating element) */}
-      <motion.div 
+      <motion.div
         className="absolute -bottom-2 -left-2 bg-[#0A0A0F] border border-white/10 px-3 py-1 rounded-full shadow-xl flex items-center gap-2"
         whileHover={{ y: -2 }}
       >
-        <RefreshCw size={12} className="text-indigo-400 animate-spin-reverse-slow" />
-        <span className="text-[10px] font-bold tracking-wider text-indigo-300 uppercase">Syncing</span>
+        <RefreshCw
+          size={12}
+          className="text-indigo-400 animate-spin-reverse-slow"
+        />
+        <span className="text-[10px] font-bold tracking-wider text-indigo-300 uppercase">
+          Syncing
+        </span>
       </motion.div>
-
     </motion.div>
   );
 }

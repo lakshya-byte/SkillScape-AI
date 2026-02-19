@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useOnboarding } from "../OnboardingContext";
 import { useRouter } from "next/navigation";
+import { registerUser } from "@/lib/authApi";
 
 // Simulation Stages matching the visual reference
 const STAGES = [
@@ -29,6 +30,7 @@ export default function Step5_Loader() {
   const [progress, setProgress] = useState(0);
   const [activeStage, setActiveStage] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const userIdRef = useRef<string | null>(null);
 
   // Total duration of the initialization sequence (in ms)
   const DURATION = 6000;
@@ -37,37 +39,26 @@ export default function Step5_Loader() {
     let interval: ReturnType<typeof setInterval>;
 
     const registerAndAnimate = async () => {
-      // ── 1. Call the register API ──────────────────────────
+      // ── 1. Call the register API via authApi ───────────────
       try {
-        const res = await fetch("http://localhost:5000/api/auth/register", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: userData.name,
-            email: userData.email,
-            password: userData.password,
-            institute: userData.institute,
-            avatar: userData.avatarId
-              ? `/avatars/${userData.avatarId}.png`
-              : "",
-            links: {
-              github: userData.links.github,
-              linkedin: userData.links.linkedin,
-              leetcode: userData.links.leetcode,
-              behance: userData.links.behance,
-            },
-          }),
+        const data = await registerUser({
+          name: userData.name,
+          email: userData.email,
+          password: userData.password,
+          institute: userData.institute,
+          avatar: userData.avatarId ? `/avatars/${userData.avatarId}.png` : "",
+          links: {
+            github: userData.links.github,
+            linkedin: userData.links.linkedin,
+            leetcode: userData.links.leetcode,
+            behance: userData.links.behance,
+          },
         });
 
-        const data = await res.json();
-
-        if (!res.ok) {
-          setError(data?.message || "Registration failed. Please try again.");
-          return;
-        }
-      } catch (err) {
-        setError("Could not connect to server. Please check your connection.");
+        // Store user ID for redirect
+        userIdRef.current = data.data?.user?._id || data.user?._id || null;
+      } catch (err: any) {
+        setError(err.message || "Registration failed. Please try again.");
         return;
       }
 
@@ -86,9 +77,13 @@ export default function Step5_Loader() {
         if (p > 75) setActiveStage(3); // Vector DB done
         if (p >= 100) {
           clearInterval(interval);
-          // Auto-navigate to completion screen
+          // Redirect to user profile
           setTimeout(() => {
-            router.push("/onboarding/complete");
+            if (userIdRef.current) {
+              router.push(`/profile/${userIdRef.current}`);
+            } else {
+              router.push("/onboarding/complete");
+            }
           }, 800);
         }
       }, 50);
