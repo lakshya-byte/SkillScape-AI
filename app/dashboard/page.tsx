@@ -24,7 +24,7 @@ const Dashboard: React.FC = () => {
                 />
 
                 {/* Scrollable content */}
-                <div className="relative z-10 px-4 md:px-8 md:ml-[185px] pt-24 md:pt-20 pb-7 flex flex-col gap-5 max-w-[960px] mx-auto">
+                <div className="relative z-10 px-4 md:px-8 md:ml-[185px] pt-24 md:pt-20 pb-7 flex flex-col gap-5 mx-auto">
                     {/* Section 1 — Header + Stats */}
                     <HeroStats />
 

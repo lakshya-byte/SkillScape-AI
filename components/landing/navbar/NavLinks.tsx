@@ -6,7 +6,7 @@ interface NavLinksProps {
 }
 
 const links = [
-  { name: "Platform", href: "/platform" },
+  { name: "Platform", href: "/dashboard" },
   { name: "Pricing", href: "/pricing" },
   { name: "Docs", href: "/docs" },
   { name: "About", href: "/about" },

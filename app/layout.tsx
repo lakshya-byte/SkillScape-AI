@@ -6,6 +6,7 @@ import Footer from "@/components/landing/footer/Footer";
 import SmoothScrollProvider from "@/components/landing/providers/SmoothScrollProvider";
 import PreloaderProvider from "@/components/landing/providers/PreloaderProvider";
 import Preloader from "@/components/landing/preloader/Preloader";
+import VelionAIAssistant from "@/components/ai/VelionAIAssistant";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,6 +49,7 @@ export default function RootLayout({
           </PreloaderProvider>
         </SmoothScrollProvider>
         <Footer />
+        <VelionAIAssistant />
       </body>
     </html>
   );
