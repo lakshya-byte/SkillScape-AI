@@ -1,0 +1,23 @@
+
+> skillscape@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.2s
+  Running TypeScript ...
+Failed to compile.
+
+./components/profile/SkillsCard.tsx:51:29
+Type error: Type 'number' is not assignable to type 'never'.
+
+[0m [90m 49 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex justify-between items-end mb-2 relative z-10"[39m[33m>[39m
+ [90m 50 |[39m               [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex items-center gap-2"[39m[33m>[39m
+[31m[1m>[22m[39m[90m 51 |[39m                 [33m<[39m[33mskill[39m[33m.[39micon size[33m=[39m{[35m14[39m} className[33m=[39m[32m"text-slate-500 group-hover/skill:text-white transition-colors"[39m [33m/[39m[33m>[39m
+ [90m    |[39m                             [31m[1m^[22m[39m
+ [90m 52 |[39m                 [33m<[39m[33mspan[39m className[33m=[39m[32m"text-sm font-semibold text-slate-300 group-hover/skill:text-white transition-colors"[39m[33m>[39m
+ [90m 53 |[39m                   {skill[33m.[39mname}
+ [90m 54 |[39m                 [33m<[39m[33m/[39m[33mspan[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null
