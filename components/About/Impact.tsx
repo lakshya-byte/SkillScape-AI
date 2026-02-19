@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import { useEffect, useRef, useState } from "react";
+import { GraduationCap, Briefcase, Search } from "lucide-react";
 
 const stats = [
   { value: "50k+", label: "Active Nodes" },
@@ -11,40 +12,22 @@ const stats = [
 
 const cards = [
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#8b5cf6" strokeWidth="1.5" strokeLinejoin="round"/>
-        <path d="M2 17l10 5 10-5" stroke="#8b5cf6" strokeWidth="1.5" strokeLinejoin="round"/>
-        <path d="M2 12l10 5 10-5" stroke="#8b5cf6" strokeWidth="1.5" strokeLinejoin="round"/>
-      </svg>
-    ),
     title: "For Students",
     desc: "Visualize your learning path. Discover how skills connect and build a personalized roadmap from novice to expert using our interactive 3D graph.",
     link: "Start Learning →",
+    icon: GraduationCap,
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <rect x="2" y="3" width="20" height="14" rx="2" stroke="#8b5cf6" strokeWidth="1.5"/>
-        <path d="M8 21h8M12 17v4" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M7 8h10M7 11h6" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
     title: "For Professionals",
     desc: "Map your career trajectory. Identify skill gaps, find adjacent technologies, and validate your expertise against industry standards in real-time.",
     link: "Analyze Career →",
+    icon: Briefcase,
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <circle cx="9" cy="7" r="4" stroke="#8b5cf6" strokeWidth="1.5"/>
-        <path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M16 3.13a4 4 0 010 7.75M21 21v-2a4 4 0 00-3-3.85" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
     title: "For Recruiters",
     desc: "Discover verified talent. Move beyond keyword matching with semantic understanding of candidate capabilities and technical depth.",
     link: "Find Talent →",
+    icon: Search,
   },
 ];
 
@@ -54,9 +37,12 @@ export default function Impact() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.1 }
     );
+
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
@@ -64,155 +50,74 @@ export default function Impact() {
   return (
     <section
       ref={ref}
-      style={{
-        background: "#0a0a0f",
-        padding: "80px 24px 0",
-        position: "relative",
-        overflow: "hidden",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className="relative bg-[#0a0a0f] pt-20 px-6 min-h-screen overflow-hidden"
     >
-      {/* Top purple border line */}
-      <div style={{
-        position: "absolute", top: 0, left: 0, right: 0, height: "3px",
-        background: "linear-gradient(90deg, transparent 0%, #8b5cf6 50%, transparent 100%)",
-      }} />
+      {/* Top Gradient Border */}
+      <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-purple-500 to-transparent" />
 
-      {/* Background glow */}
-      <div style={{
-        position: "absolute", top: "20%", left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: "800px", height: "500px",
-        background: "radial-gradient(ellipse, rgba(139,92,246,0.08) 0%, transparent 65%)",
-        pointerEvents: "none",
-      }} />
+      {/* Background Glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[radial-gradient(ellipse_at_center,_rgba(139,92,246,0.08),transparent_65%)] pointer-events-none" />
 
-      <div style={{ maxWidth: "1100px", margin: "0 auto", width: "100%", flex: 1 }}>
+      <div className="max-w-6xl mx-auto">
+
         {/* Badge */}
-        <div style={{
-          display: "flex", justifyContent: "center", marginBottom: "28px",
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.6s ease",
-        }}>
-          <span style={{
-            display: "inline-flex", alignItems: "center", gap: "8px",
-            background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.35)",
-            borderRadius: "20px", padding: "6px 16px",
-            color: "#a78bfa", fontSize: "11px", fontWeight: 600,
-            letterSpacing: "0.12em", textTransform: "uppercase",
-          }}>
-            <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#8b5cf6" }} />
+        <div
+          className={`flex justify-center mb-8 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
+        >
+          <span className="flex items-center gap-2 bg-purple-500/15 border border-purple-500/30 rounded-full px-4 py-1 text-xs font-semibold tracking-widest uppercase text-purple-400">
+            <span className="w-1.5 h-1.5 bg-purple-500 rounded-full animate-pulse" />
             The Impact
           </span>
         </div>
 
-        {/* Headline */}
-        <div style={{
-          textAlign: "center", marginBottom: "20px",
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(30px)",
-          transition: "all 0.6s ease 0.1s",
-        }}>
-          <h1 style={{
-            color: "#ffffff",
-            fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
-            fontWeight: 800,
-            fontFamily: "'Sora', 'Segoe UI', sans-serif",
-            lineHeight: 1.1,
-            margin: 0,
-          }}>
-            Redefining
-            <br />
-            <span style={{
-              background: "linear-gradient(135deg, #8b5cf6 30%, #c084fc 70%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}>
+        {/* Heading */}
+        <div
+          className={`text-center mb-6 transition-all duration-700 delay-100 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+            }`}
+        >
+          <h1 className="text-4xl md:text-6xl font-extrabold leading-tight">
+            Redefining <br />
+            <span className="bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent">
               Technical Intelligence
             </span>
           </h1>
         </div>
 
         {/* Subheading */}
-        <p style={{
-          textAlign: "center", color: "#9ca3af",
-          fontSize: "clamp(0.9rem, 1.5vw, 1.05rem)",
-          maxWidth: "460px", margin: "0 auto 56px",
-          lineHeight: 1.7,
-          opacity: visible ? 1 : 0,
-          transform: visible ? "translateY(0)" : "translateY(20px)",
-          transition: "all 0.6s ease 0.2s",
-        }}>
-          Connecting the dots between potential and mastery through our immersive 3D knowledge graph technology. We don't just map skills; we reveal the future of work.
+        <p
+          className={`text-center text-gray-400 max-w-xl mx-auto mb-16 text-sm md:text-base leading-relaxed transition-all duration-700 delay-200 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
+            }`}
+        >
+          Connecting the dots between potential and mastery through our immersive 3D knowledge graph technology. We don’t just map skills — we reveal the future of work.
         </p>
 
         {/* Cards */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-          gap: "20px",
-          marginBottom: "80px",
-        }}>
+        <div className="grid md:grid-cols-3 gap-6 mb-20">
           {cards.map((card, i) => (
             <div
               key={i}
-              style={{
-                background: "rgba(255,255,255,0.025)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                borderRadius: "16px",
-                padding: "32px 28px",
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(40px)",
-                transition: `all 0.6s cubic-bezier(0.34,1.56,0.64,1) ${0.3 + i * 0.1}s`,
-                cursor: "default",
-              }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.border = "1px solid rgba(139,92,246,0.4)";
-                el.style.background = "rgba(139,92,246,0.06)";
-                el.style.transform = "translateY(-5px)";
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement;
-                el.style.border = "1px solid rgba(255,255,255,0.07)";
-                el.style.background = "rgba(255,255,255,0.025)";
-                el.style.transform = "translateY(0)";
-              }}
+              className={`bg-white/[0.03] border border-white/10 rounded-2xl p-8 transition-all duration-700 hover:-translate-y-2 hover:border-purple-500/40 hover:bg-purple-500/5 ${visible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
+                }`}
+              style={{ transitionDelay: `${0.3 + i * 0.1}s` }}
             >
-              {/* Icon box */}
-              <div style={{
-                width: "52px", height: "52px", borderRadius: "12px",
-                background: "rgba(139,92,246,0.12)",
-                border: "1px solid rgba(139,92,246,0.2)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                marginBottom: "20px",
-              }}>
-                {card.icon}
+              <div className="w-12 h-12 rounded-xl bg-purple-500/15 border border-purple-500/30 flex items-center justify-center mb-6 text-purple-400 font-bold">
+                <card.icon size={24} />
               </div>
 
-              <h3 style={{
-                color: "#ffffff", fontSize: "1.1rem", fontWeight: 700,
-                fontFamily: "'Sora', 'Segoe UI', sans-serif",
-                margin: "0 0 12px",
-              }}>
+              <h3 className="text-lg font-semibold mb-3 text-white">
                 {card.title}
               </h3>
-              <p style={{
-                color: "#9ca3af", fontSize: "0.875rem", lineHeight: 1.7,
-                margin: "0 0 20px",
-              }}>
+
+              <p className="text-gray-400 text-sm leading-relaxed mb-4">
                 {card.desc}
               </p>
-              <a href="#" style={{
-                color: "#8b5cf6", fontSize: "0.875rem", fontWeight: 600,
-                textDecoration: "none",
-                display: "inline-flex", alignItems: "center", gap: "4px",
-              }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#a78bfa")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#8b5cf6")}
+
+              <a
+                href="#"
+                className="text-purple-400 text-sm font-semibold hover:text-purple-300 transition"
               >
                 {card.link}
               </a>
@@ -222,39 +127,21 @@ export default function Impact() {
       </div>
 
       {/* Stats Bar */}
-      <div style={{
-        borderTop: "1px solid rgba(255,255,255,0.07)",
-        padding: "32px 24px",
-        background: "rgba(0,0,0,0.2)",
-      }}>
-        <div style={{
-          maxWidth: "1100px", margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-          gap: "16px",
-        }}>
+      <div className="border-t border-white/10 py-10 bg-black/20">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {stats.map((s, i) => (
             <div
               key={i}
-              style={{
-                textAlign: "center",
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(20px)",
-                transition: `all 0.5s ease ${0.6 + i * 0.08}s`,
-              }}
+              className={`transition-all duration-700 ${visible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-5"
+                }`}
+              style={{ transitionDelay: `${0.6 + i * 0.08}s` }}
             >
-              <div style={{
-                color: "#ffffff", fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-                fontWeight: 800, fontFamily: "'Sora', sans-serif",
-                lineHeight: 1,
-              }}>
+              <div className="text-2xl md:text-3xl font-extrabold text-white">
                 {s.value}
               </div>
-              <div style={{
-                color: "#6b7280", fontSize: "0.7rem",
-                letterSpacing: "0.1em", textTransform: "uppercase",
-                marginTop: "6px", fontWeight: 500,
-              }}>
+              <div className="text-xs uppercase tracking-widest text-gray-500 mt-2">
                 {s.label}
               </div>
             </div>

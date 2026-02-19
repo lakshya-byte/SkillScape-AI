@@ -1,52 +1,102 @@
-"use client"
+"use client";
 
 import { useEffect, useRef, useState } from "react";
+import { FileCode, Cpu, Box, Minus, CheckCircle, Globe, Share2, ZoomIn, History, Compass, Layout } from "lucide-react";
+import { motion } from "motion/react";
 
 const processSteps = [
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <ellipse cx="12" cy="12" rx="10" ry="5.5" stroke="#8b5cf6" strokeWidth="1.5"/>
-        <ellipse cx="12" cy="12" rx="10" ry="5.5" stroke="#8b5cf6" strokeWidth="1.5" transform="rotate(60 12 12)"/>
-        <ellipse cx="12" cy="12" rx="10" ry="5.5" stroke="#8b5cf6" strokeWidth="1.5" transform="rotate(120 12 12)"/>
-      </svg>
-    ),
     title: "Data Sources",
     desc: "Ingesting raw data from your digital footprint.",
     tags: ["GitHub", "LinkedIn", "Resume"],
     accent: false,
+    icon: FileCode,
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="3" stroke="#8b5cf6" strokeWidth="1.5"/>
-        <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
     title: "AI Processing",
     desc: "Natural Language Understanding & Semantic Analysis.",
     tags: [],
     accent: false,
+    icon: Cpu,
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="3" width="18" height="18" rx="3" fill="rgba(139,92,246,0.2)" stroke="#8b5cf6" strokeWidth="1.5"/>
-        <circle cx="8" cy="8" r="1.5" fill="#8b5cf6"/>
-        <circle cx="16" cy="8" r="1.5" fill="#8b5cf6"/>
-        <circle cx="12" cy="16" r="1.5" fill="#8b5cf6"/>
-        <line x1="8" y1="8" x2="16" y2="8" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="2 2"/>
-        <line x1="8" y1="8" x2="12" y2="16" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="2 2"/>
-        <line x1="16" y1="8" x2="12" y2="16" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="2 2"/>
-      </svg>
-    ),
     title: "3D Skill Graph",
     desc: "An interactive knowledge network of your expertise.",
     tags: [],
     accent: true,
     preview: true,
+    icon: Box,
   },
 ];
+
+const MiniGraph = () => (
+  <div className="relative w-24 h-16">
+    <svg viewBox="0 0 100 60" className="w-full h-full">
+      {/* Lines */}
+      <motion.line
+        x1="20" y1="30" x2="50" y2="15"
+        stroke="currentColor" strokeWidth="0.5" className="text-purple-500/30"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+      />
+      <motion.line
+        x1="20" y1="30" x2="50" y2="45"
+        stroke="currentColor" strokeWidth="0.5" className="text-purple-500/30"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, delay: 0.2, repeat: Infinity, repeatType: "reverse" }}
+      />
+      <motion.line
+        x1="50" y1="15" x2="80" y2="30"
+        stroke="currentColor" strokeWidth="0.5" className="text-purple-500/30"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, delay: 0.4, repeat: Infinity, repeatType: "reverse" }}
+      />
+      <motion.line
+        x1="50" y1="45" x2="80" y2="30"
+        stroke="currentColor" strokeWidth="0.5" className="text-purple-500/30"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, delay: 0.6, repeat: Infinity, repeatType: "reverse" }}
+      />
+      <motion.line
+        x1="50" y1="15" x2="50" y2="45"
+        stroke="currentColor" strokeWidth="0.5" className="text-purple-500/30"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 1.5, delay: 0.8, repeat: Infinity, repeatType: "reverse" }}
+      />
+
+      {/* Nodes */}
+      <motion.circle
+        cx="20" cy="30" r="4"
+        className="fill-purple-500"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 2, repeat: Infinity }}
+      />
+      <motion.circle
+        cx="50" cy="15" r="3"
+        className="fill-purple-400"
+        animate={{ scale: [1, 1.1, 1] }}
+        transition={{ duration: 2.5, repeat: Infinity }}
+      />
+      <motion.circle
+        cx="50" cy="45" r="3"
+        className="fill-purple-400"
+        animate={{ scale: [1, 1.1, 1] }}
+        transition={{ duration: 2.5, delay: 0.5, repeat: Infinity }}
+      />
+      <motion.circle
+        cx="80" cy="30" r="4"
+        className="fill-purple-500"
+        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 2, delay: 1, repeat: Infinity }}
+      />
+    </svg>
+  </div>
+);
 
 const traditionalCons = [
   { label: "Static & Flat", desc: "Resumes are stuck in 2D, failing to capture complexity." },
@@ -56,10 +106,10 @@ const traditionalCons = [
 ];
 
 const skillscapePros = [
-  { label: "Interactive 3D Universe", desc: "Rotate, zoom, and explore connections between technologies visually." },
-  { label: "Code-Verified Skills", desc: "Evidence-based graphing derived directly from your commit history." },
-  { label: "Exploratory Navigation", desc: "Discover hidden strengths and adjacent skills you didn't know you had." },
-  { label: "Immersive Experience", desc: "Leave a lasting impression with a portfolio that feels alive." },
+  { label: "Interactive 3D Universe", desc: "Rotate, zoom, and explore connections visually." },
+  { label: "Code-Verified Skills", desc: "Evidence-based graphing from commit history." },
+  { label: "Exploratory Navigation", desc: "Discover hidden strengths and adjacent skills." },
+  { label: "Immersive Experience", desc: "A portfolio that feels alive and unforgettable." },
 ];
 
 export default function Importance() {
@@ -68,7 +118,9 @@ export default function Importance() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setVisible(true);
+      },
       { threshold: 0.1 }
     );
     if (ref.current) observer.observe(ref.current);
@@ -77,144 +129,79 @@ export default function Importance() {
 
   return (
     <div ref={ref}>
-      {/* ─── SECTION 1: The Process ─── */}
-      <section style={{
-        background: "#0a0a0f",
-        padding: "100px 24px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          {/* Badge */}
-          <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: "8px",
-              background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.3)",
-              borderRadius: "20px", padding: "5px 14px",
-              color: "#a78bfa", fontSize: "11px", fontWeight: 600,
-              letterSpacing: "0.12em", textTransform: "uppercase",
-            }}>
-              The Process
-            </span>
-          </div>
 
-          <h2 style={{
-            textAlign: "center",
-            color: "#ffffff",
-            fontSize: "clamp(2rem, 4vw, 3rem)",
-            fontWeight: 700,
-            fontFamily: "'Sora','Segoe UI',sans-serif",
-            margin: "0 0 16px",
-          }}>
-            From Chaos to Constellation
+      {/* ─── SECTION 1: PROCESS ─── */}
+      <section className="relative bg-[#0a0a0f] py-24 px-6 overflow-hidden">
+        <div className="max-w-6xl mx-auto text-center">
+
+          {/* Badge */}
+          <span className="inline-flex items-center gap-2 bg-purple-500/15 border border-purple-500/30 rounded-full px-4 py-1 text-xs font-semibold tracking-widest uppercase text-purple-400 mb-6">
+            The Process
+          </span>
+
+          {/* Heading */}
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">
+            From Chaos to{" "}
+            <span className="bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent">
+              Constellation
+            </span>
           </h2>
-          <p style={{
-            textAlign: "center", color: "#9ca3af",
-            fontSize: "1rem", maxWidth: "440px",
-            margin: "0 auto 60px", lineHeight: 1.7,
-          }}>
+
+          <p className="text-gray-400 max-w-xl mx-auto mb-16 text-sm md:text-base leading-relaxed">
             We ingest your scattered digital footprint and synthesize it into an interactive, 3D universe of your technical capabilities.
           </p>
 
           {/* Process Cards */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "20px",
-          }}>
+          <div className="grid md:grid-cols-3 gap-6">
             {processSteps.map((step, i) => (
               <div
                 key={i}
-                style={{
-                  background: step.accent
-                    ? "linear-gradient(135deg, rgba(139,92,246,0.15), rgba(109,40,217,0.08))"
-                    : "rgba(255,255,255,0.025)",
-                  border: step.accent
-                    ? "1px solid rgba(139,92,246,0.4)"
-                    : "1px solid rgba(255,255,255,0.07)",
-                  borderRadius: "16px",
-                  padding: "32px 28px",
-                  opacity: visible ? 1 : 0,
-                  transform: visible ? "translateY(0)" : "translateY(40px)",
-                  transition: `all 0.6s ease ${i * 0.12}s`,
-                  position: "relative",
-                  overflow: "hidden",
-                }}
+                className={`rounded-2xl p-8 transition-all duration-700 ${step.accent
+                  ? "bg-gradient-to-br from-purple-500/15 to-purple-800/10 border border-purple-500/40"
+                  : "bg-white/[0.03] border border-white/10"
+                  } ${visible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-10"
+                  }`}
+                style={{ transitionDelay: `${i * 0.15}s` }}
               >
-                <div style={{
-                  width: "50px", height: "50px", borderRadius: "12px",
-                  background: step.accent ? "rgba(139,92,246,0.25)" : "rgba(139,92,246,0.1)",
-                  border: "1px solid rgba(139,92,246,0.25)",
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  marginBottom: "20px",
-                }}>
-                  {step.icon}
+                <div className="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center mb-6 text-purple-400 font-bold">
+                  <step.icon size={24} />
                 </div>
 
-                <h3 style={{
-                  color: "#ffffff", fontSize: "1rem", fontWeight: 700,
-                  fontFamily: "'Sora','Segoe UI',sans-serif",
-                  margin: "0 0 10px",
-                }}>
+                <h3 className="text-lg font-semibold text-white mb-3">
                   {step.title}
                 </h3>
-                <p style={{ color: "#9ca3af", fontSize: "0.875rem", lineHeight: 1.6, margin: 0 }}>
+
+                <p className="text-gray-400 text-sm mb-4">
                   {step.desc}
                 </p>
 
                 {/* Tags */}
                 {step.tags.length > 0 && (
-                  <div style={{ display: "flex", gap: "8px", marginTop: "20px", flexWrap: "wrap" }}>
+                  <div className="flex flex-wrap gap-2 mt-4">
                     {step.tags.map((tag, ti) => (
-                      <span key={ti} style={{
-                        background: "rgba(139,92,246,0.12)",
-                        border: "1px solid rgba(139,92,246,0.2)",
-                        borderRadius: "6px", padding: "4px 10px",
-                        color: "#a78bfa", fontSize: "11px", fontWeight: 500,
-                      }}>
+                      <span
+                        key={ti}
+                        className="bg-purple-500/15 border border-purple-500/30 rounded-md px-3 py-1 text-xs text-purple-300"
+                      >
                         {tag}
                       </span>
                     ))}
                   </div>
                 )}
 
-                {/* 3D Graph mini preview */}
                 {step.preview && (
-                  <div style={{
-                    marginTop: "20px",
-                    background: "rgba(0,0,0,0.4)",
-                    borderRadius: "10px",
-                    border: "1px solid rgba(139,92,246,0.2)",
-                    padding: "12px",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                  }}>
-                    <svg width="80" height="60" viewBox="0 0 80 60">
-                      {[
-                        [20,30,60,15],[20,30,40,50],[60,15,60,45],[60,45,40,50]
-                      ].map(([x1,y1,x2,y2], idx) => (
-                        <line key={idx} x1={x1} y1={y1} x2={x2} y2={y2}
-                          stroke="rgba(139,92,246,0.5)" strokeWidth="1"/>
-                      ))}
-                      {[[20,30],[60,15],[60,45],[40,50]].map(([cx,cy], idx) => (
-                        <circle key={idx} cx={cx} cy={cy} r="4" fill="#8b5cf6"/>
-                      ))}
-                    </svg>
+                  <div className="mt-6 bg-black/40 border border-purple-500/20 rounded-lg p-4 flex justify-center items-center h-24">
+                    <MiniGraph />
                   </div>
                 )}
 
-                {/* Progress bar for AI Processing */}
+                {/* Progress Bar */}
                 {i === 1 && (
-                  <div style={{ marginTop: "20px" }}>
-                    <div style={{
-                      height: "3px", background: "rgba(255,255,255,0.08)",
-                      borderRadius: "99px", overflow: "hidden",
-                    }}>
-                      <div style={{
-                        height: "100%", width: "60%",
-                        background: "linear-gradient(90deg, #7c3aed, #8b5cf6)",
-                        borderRadius: "99px",
-                        transition: "width 1.5s ease 0.5s",
-                      }} />
+                  <div className="mt-6">
+                    <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full w-3/5 bg-gradient-to-r from-purple-600 to-purple-400 rounded-full transition-all duration-1000" />
                     </div>
                   </div>
                 )}
@@ -224,140 +211,79 @@ export default function Importance() {
         </div>
       </section>
 
-      {/* ─── SECTION 2: Beyond the PDF ─── */}
-      <section style={{
-        background: "#0d0618",
-        padding: "100px 24px",
-        position: "relative",
-        overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", top: "30%", left: "50%",
-          transform: "translate(-50%,-50%)",
-          width: "700px", height: "400px",
-          background: "radial-gradient(ellipse, rgba(124,58,237,0.08) 0%, transparent 65%)",
-          pointerEvents: "none",
-        }} />
+      {/* ─── SECTION 2: BEYOND THE PDF ─── */}
+      <section className="relative bg-[#0d0618] py-24 px-6 overflow-hidden">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[radial-gradient(ellipse_at_center,_rgba(124,58,237,0.08),transparent_65%)] pointer-events-none" />
 
-        <div style={{ maxWidth: "900px", margin: "0 auto", position: "relative" }}>
+        <div className="max-w-5xl mx-auto relative">
+
           {/* Badge */}
-          <div style={{ textAlign: "center", marginBottom: "20px" }}>
-            <span style={{
-              display: "inline-flex", alignItems: "center", gap: "8px",
-              background: "rgba(139,92,246,0.12)", border: "1px solid rgba(139,92,246,0.3)",
-              borderRadius: "20px", padding: "5px 14px",
-              color: "#a78bfa", fontSize: "11px", fontWeight: 600,
-              letterSpacing: "0.12em", textTransform: "uppercase",
-            }}>
+          <div className="text-center mb-6">
+            <span className="inline-flex items-center gap-2 bg-purple-500/15 border border-purple-500/30 rounded-full px-4 py-1 text-xs font-semibold tracking-widest uppercase text-purple-400">
               Why It Matters
             </span>
           </div>
 
-          <h2 style={{
-            textAlign: "center", color: "#ffffff",
-            fontSize: "clamp(2rem, 4vw, 3rem)", fontWeight: 700,
-            fontFamily: "'Sora','Segoe UI',sans-serif",
-            margin: "0 0 56px",
-          }}>
+          <h2 className="text-center text-3xl md:text-5xl font-bold mb-16">
             Beyond the PDF
           </h2>
 
-          {/* Comparison */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "20px",
-          }}
-          className="beyond-grid"
-          >
-            {/* Left: Traditional */}
-            <div style={{
-              background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.07)",
-              borderRadius: "16px", padding: "28px",
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(-30px)",
-              transition: "all 0.6s ease 0.2s",
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "24px" }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#6b7280" strokeWidth="1.5"/>
-                  <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="#6b7280" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-                <span style={{ color: "#6b7280", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                  Traditional Portfolios
-                </span>
+          <div className="grid md:grid-cols-2 gap-6">
+
+            {/* Traditional */}
+            <div
+              className={`bg-white/[0.03] border border-white/10 rounded-2xl p-8 transition-all duration-700 ${visible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 -translate-x-6"
+                }`}
+            >
+              <span className="uppercase text-xs tracking-widest text-gray-500 font-semibold">
+                Traditional Portfolios
+              </span>
+
+              <div className="mt-6 space-y-6">
+                {traditionalCons.map((item, i) => (
+                  <div key={i}>
+                    <h4 className="text-gray-400 font-semibold text-sm">
+                      {item.label}
+                    </h4>
+                    <p className="text-gray-500 text-xs mt-1">
+                      {item.desc}
+                    </p>
+                  </div>
+                ))}
               </div>
-              {traditionalCons.map((item, i) => (
-                <div key={i} style={{ display: "flex", gap: "12px", marginBottom: "18px", alignItems: "flex-start" }}>
-                  <div style={{
-                    width: "16px", height: "16px", borderRadius: "50%",
-                    border: "1.5px solid #4b5563",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    flexShrink: 0, marginTop: "2px",
-                  }}>
-                    <div style={{ width: "6px", height: "1px", background: "#4b5563" }} />
-                  </div>
-                  <div>
-                    <div style={{ color: "#6b7280", fontWeight: 600, fontSize: "0.875rem" }}>{item.label}</div>
-                    <div style={{ color: "#4b5563", fontSize: "0.8rem", lineHeight: 1.5, marginTop: "2px" }}>{item.desc}</div>
-                  </div>
-                </div>
-              ))}
             </div>
 
-            {/* Right: SkillScape */}
-            <div style={{
-              background: "linear-gradient(135deg, rgba(139,92,246,0.12), rgba(109,40,217,0.06))",
-              border: "1px solid rgba(139,92,246,0.3)",
-              borderRadius: "16px", padding: "28px",
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateX(0)" : "translateX(30px)",
-              transition: "all 0.6s ease 0.3s",
-              position: "relative",
-            }}>
-              {/* THE FUTURE tag */}
-              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "24px" }}>
-                <span style={{
-                  background: "rgba(139,92,246,0.2)", border: "1px solid rgba(139,92,246,0.4)",
-                  borderRadius: "20px", padding: "3px 10px",
-                  color: "#a78bfa", fontSize: "10px", fontWeight: 700, letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                }}>
-                  The Future
-                </span>
-                <span style={{ color: "#a78bfa", fontSize: "0.875rem", fontWeight: 700 }}>SkillScape AI</span>
-              </div>
+            {/* SkillScape */}
+            <div
+              className={`bg-gradient-to-br from-purple-500/15 to-purple-800/10 border border-purple-500/40 rounded-2xl p-8 transition-all duration-700 ${visible
+                ? "opacity-100 translate-x-0"
+                : "opacity-0 translate-x-6"
+                }`}
+            >
+              <span className="uppercase text-xs tracking-widest text-purple-400 font-semibold">
+                The Future · SkillScape AI
+              </span>
 
-              {skillscapePros.map((item, i) => (
-                <div key={i} style={{ display: "flex", gap: "12px", marginBottom: "18px", alignItems: "flex-start" }}>
-                  <div style={{
-                    width: "18px", height: "18px", borderRadius: "50%",
-                    border: "1.5px solid #8b5cf6",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    flexShrink: 0, marginTop: "2px",
-                    background: "rgba(139,92,246,0.15)",
-                  }}>
-                    <svg width="10" height="10" viewBox="0 0 12 12">
-                      <path d="M2 6l3 3 5-5" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+              <div className="mt-6 space-y-6">
+                {skillscapePros.map((item, i) => (
+                  <div key={i}>
+                    <h4 className="text-white font-semibold text-sm">
+                      {item.label}
+                    </h4>
+                    <p className="text-gray-400 text-xs mt-1">
+                      {item.desc}
+                    </p>
                   </div>
-                  <div>
-                    <div style={{ color: "#e5e7eb", fontWeight: 600, fontSize: "0.875rem" }}>{item.label}</div>
-                    <div style={{ color: "#9ca3af", fontSize: "0.8rem", lineHeight: 1.5, marginTop: "2px" }}>{item.desc}</div>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+
           </div>
         </div>
-
-        <style>{`
-          @media (max-width: 640px) {
-            .beyond-grid { grid-template-columns: 1fr !important; }
-          }
-        `}</style>
       </section>
+
     </div>
   );
 }
