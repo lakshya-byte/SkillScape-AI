@@ -1,5 +1,15 @@
 # VelionAI — Neural Operations & Skill Intelligence Platform
 
+## 🔗 Project Resources
+
+- 🎨 **Figma Design**:  
+  https://www.figma.com/design/LxaJjWXqwbDYgUSNNSR7gS/skillscape?node-id=0-1&t=3uFifdsvqvRYbU7P-1
+
+- 📊 **Project Presentation (PPT)**:  
+  https://drive.google.com/file/d/1x_aCUa8amRO2cUeUUxgHSh5gXNMAR5K4/view?usp=sharing
+
+---
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.0-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.0-blue?style=flat-square&logo=react)](https://react.dev/)
