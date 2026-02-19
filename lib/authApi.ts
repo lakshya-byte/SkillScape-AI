@@ -63,3 +63,47 @@ export const resetPassword = async (email: string, otp: string, newPassword: str
     const response = await api.post("/auth/reset-password", { email, otp, newPassword });
     return response.data;
 };
+
+// ─── Agent Chat API Layer (SSE Streaming) ───────────────────────
+
+export async function* streamAgentChat(message: string, conversationId?: string) {
+    const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+    const response = await fetch(`${baseURL}/agent/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ message, conversationId }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to connect to VelionAI agent");
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error("No response stream");
+
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const line of lines) {
+            if (line.startsWith("data: ")) {
+                const data = line.slice(6).trim();
+                if (data === "[DONE]") return;
+                try {
+                    yield JSON.parse(data);
+                } catch {
+                    // skip malformed chunks
+                }
+            }
+        }
+    }
+}

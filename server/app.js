@@ -9,6 +9,7 @@ import githubRouter from "./routes/github.route.js";
 import notionRouter from "./routes/notion.route.js";
 import paymentRouter from "./routes/payment.route.js";
 import resetPasswordRouter from "./routes/resetPassword.route.js";
+import agentRouter from "./routes/agent.route.js";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRouter);
 app.use("/api/auth", resetPasswordRouter);
 app.use("/api/user", userRouter);
+app.use("/api/agent", agentRouter);
 app.use("/github", githubRouter);
 app.use("/notion", notionRouter);
 app.use("/api/payments", paymentRouter);
