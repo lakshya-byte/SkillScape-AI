@@ -28,7 +28,8 @@ const userSchema = new mongoose.Schema(
             github: {
                 url:String,
                 oauthConnected: {type:Boolean,default:false},
-                accessToken:String
+                accessToken:String,
+                repos:Array
             },
             notion:{
                 oauthConnected: {type:Boolean,default:false},

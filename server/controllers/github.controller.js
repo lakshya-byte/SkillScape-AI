@@ -23,42 +23,50 @@ const getAllMyRepos = async (req,res) => {
         const githubUsername = githubLink.split("github.com/")[1];
         const response = await fetch(`https://api.github.com/users/${githubUsername}/repos`);
         const repos = await response.json();
-        // const formattedRepos = await Promise.all(
-        //     repos.map(async (repo) => {
-        //         let repo_languages = {};
+        const formattedRepos = await Promise.all(
+            repos.map(async (repo) => {
+                let repo_languages = {};
         
-        //         try {
-        //             const res = await fetch(
-        //                 `https://api.github.com/repos/${githubUsername}/${repo.name}/languages`
-        //             );
+                try {
+                    const res = await fetch(
+                        `https://api.github.com/repos/${githubUsername}/${repo.name}/languages`
+                    );
         
-        //             if (res.ok) {
-        //                 repo_languages = await res.json();
-        //             }
-        //         } catch (err) {
-        //             console.error(`Failed to fetch languages for ${repo.name}`);
-        //         }
+                    if (res.ok) {
+                        repo_languages = await res.json();
+                    }
+                } catch (err) {
+                    console.error(`Failed to fetch languages for ${repo.name}`);
+                }
         
-        //         return {
-        //             project_name: repo.name,
-        //             description: repo.description || "",
-        //             topics: repo.topics || [],
-        //             primary_language: repo.language || null,
-        //             repo_languages,
+                return {
+                    project_name: repo.name,
+                    description: repo.description || "",
+                    topics: repo.topics || [],
+                    primary_language: repo.language || null,
+                    repo_languages,
         
-        //             created_at: repo.created_at,
-        //             last_updated: repo.pushed_at,
+                    created_at: repo.created_at,
+                    last_updated: repo.pushed_at,
         
-        //             stars: repo.stargazers_count || 0,
-        //             forks: repo.forks_count || 0,
+                    stars: repo.stargazers_count || 0,
+                    forks: repo.forks_count || 0,
         
-        //             size: repo.size,
-        //             default_branch: repo.default_branch
-        //         };
-        //     })
-        // );
-        
-        return res.status(200).json(new ApiResponse(200, repos, "Github repositories fetched successfully"));
+                    size: repo.size,
+                    default_branch: repo.default_branch
+                };
+            })
+        );
+        await User.findByIdAndUpdate(req.user._id,{
+            platforms:{
+                ...user.platforms,
+                github:{
+                    ...github,
+                    repos:formattedRepos
+                }
+            }
+        })
+        return res.status(200).json(new ApiResponse(200, formattedRepos, "Github repositories fetched successfully"));
     }catch(err){
         console.log(err);
         return res.status(500).json(new ApiError(500,err.message))
@@ -127,6 +135,54 @@ const getGithubCallback = async (req,res) => {
 
     const githubUser = await githubUserResponse.json();
     console.log(githubUser);
+    const reposResponse = await fetch(
+        "https://api.github.com/user/repos?per_page=100&sort=updated",
+        {
+            headers: {
+                Authorization: `Bearer ${tokens.accessToken()}`,
+            },
+        }
+    );
+    if (!reposResponse.ok) return handleFailedLogin();
+    const repos = await reposResponse.json();
+    const formattedRepos = await Promise.all(
+        repos.map(async (repo) => {
+            let repo_languages = {};
+    
+            try {
+                const res = await fetch(
+                    `https://api.github.com/repos/${githubUsername}/${repo.name}/languages`
+                );
+    
+                if (res.ok) {
+                    repo_languages = await res.json();
+                }
+            } catch (err) {
+                console.error(`Failed to fetch languages for ${repo.name}`);
+            }
+    
+            return {
+                project_name: repo.name,
+                description: repo.description || "",
+                topics: repo.topics || [],
+                primary_language: repo.language || null,
+                repo_languages,
+    
+                created_at: repo.created_at,
+                last_updated: repo.pushed_at,
+    
+                stars: repo.stargazers_count || 0,
+                forks: repo.forks_count || 0,
+    
+                size: repo.size,
+                default_branch: repo.default_branch
+            };
+        })
+    );
+    res.json({
+        user: githubUser,
+        repos: formattedRepos,
+    });
 }
 
 

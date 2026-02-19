@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.get("/getAllMyRepos",verifyJWT, getAllMyRepos);
 router.get("/oauth",getGithubAuth)
-router.get("/callback",verifyJWT,getGithubCallback)
+router.get("/callback",getGithubCallback)
 
 export default router
