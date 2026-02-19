@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllMyRepos,getGithubAuth,getGithubCallback } from '../controllers/github.controller.js';
+import { disconnectGithub, fetchRepos, getAllMyRepos,getGithubAuth,getGithubCallback } from '../controllers/github.controller.js';
 import { verifyJWT } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
@@ -7,5 +7,7 @@ const router = express.Router();
 router.get("/getAllMyRepos",verifyJWT, getAllMyRepos);
 router.get("/oauth",getGithubAuth)
 router.get("/callback",getGithubCallback)
+router.get("/disconnect",verifyJWT, disconnectGithub);
+router.get("/fetchRepos",verifyJWT, fetchRepos);
 
 export default router
