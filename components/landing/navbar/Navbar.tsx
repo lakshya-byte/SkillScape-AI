@@ -4,11 +4,15 @@ import React, { useState, useEffect } from "react";
 import NavLogo from "./NavLogo";
 import NavLinks from "./NavLinks";
 import RegisterButton from "./RegisterButton";
+import ProfileButton from "./ProfileButton";
 import MobileMenu from "./MobileMenu";
+import { getMyself } from "@/lib/authApi";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,6 +22,14 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Check auth state on mount (cookie-based, no localStorage)
+  useEffect(() => {
+    getMyself()
+      .then(() => setIsLoggedIn(true))
+      .catch(() => setIsLoggedIn(false))
+      .finally(() => setAuthChecked(true));
   }, []);
 
   return (
@@ -61,7 +73,12 @@ export default function Navbar() {
 
         <div className="relative z-10 flex items-center gap-3">
           <div className="hidden sm:block">
-            <RegisterButton isScrolled={isScrolled} />
+            {authChecked &&
+              (isLoggedIn ? (
+                <ProfileButton />
+              ) : (
+                <RegisterButton isScrolled={isScrolled} />
+              ))}
           </div>
 
           <MobileMenu
