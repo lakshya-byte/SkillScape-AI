@@ -4,7 +4,7 @@
 Create a `.env.local` file in the root directory with:
 
 ```
-NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_API_URL=http://localhost:8000
 NEXT_PUBLIC_RAZORPAY_KEY_ID=your_razorpay_key_id_here
 ```
 
