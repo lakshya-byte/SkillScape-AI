@@ -3,11 +3,55 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
+<<<<<<< HEAD
   {
     email: {
       type: String,
       required: true,
       unique: true,
+=======
+    {
+        email: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        password: {
+            type: String,
+            required:true
+        },
+        name: {
+            type: String,
+            required:true
+        },
+        avatar:String,
+        role:{
+            type:String,
+            enum:["Student", "Pass-out", "Others"],
+            default:"Student"
+        },
+        institute:String,
+        platforms:{
+            github: {
+                url:String,
+                oauthConnected: {type:Boolean,default:false},
+                accessToken:String,
+                repos:Array
+            },
+            notion:{
+                oauthConnected: {type:Boolean,default:false},
+                accessToken:String 
+            },
+            linkedin:String,
+            behance:String,
+            leetcode:String
+        },
+        refreshToken: String,  
+        lastSync: {
+            type: Date
+        }
+        
+>>>>>>> ce784fb7fe9b734cea6543e787314580260257e1
     },
     password: {
       type: String,
