@@ -40,6 +40,8 @@ const userSchema = new mongoose.Schema(
       leetcode: String,
     },
     refreshToken: String,
+    resetPasswordOTP: String,
+    resetPasswordOTPExpires: Date,
     lastSync: {
       type: Date,
     },

@@ -46,3 +46,20 @@ export const updateAvatar = async (avatar: string) => {
     const response = await api.post("/user/updateUser", { avatar });
     return response.data;
 };
+
+// ─── Password Reset API Layer ───────────────────────────────────
+
+export const sendResetOTP = async (email: string) => {
+    const response = await api.post("/auth/send-reset-otp", { email });
+    return response.data;
+};
+
+export const verifyResetOTP = async (email: string, otp: string) => {
+    const response = await api.post("/auth/verify-reset-otp", { email, otp });
+    return response.data;
+};
+
+export const resetPassword = async (email: string, otp: string, newPassword: string) => {
+    const response = await api.post("/auth/reset-password", { email, otp, newPassword });
+    return response.data;
+};
