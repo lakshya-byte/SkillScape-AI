@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer
       className="
-        relative
+        relative pl-50
         w-full
         bg-black
         border-t border-white/[0.08]
