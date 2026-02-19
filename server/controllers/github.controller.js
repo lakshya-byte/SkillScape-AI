@@ -56,111 +56,77 @@ const getGithubAuth = async (req, res) => {
 //  • Return postMessage HTML to close popup
 // ─────────────────────────────────────────────────────────
 const getGithubCallback = async (req, res) => {
-  // Helper: send error HTML that closes popup
-  const sendError = (reason = "unknown") => {
-    console.error("GitHub OAuth callback failed:", reason);
-    return res.send(`
-      <html><body>
-      <script>
-        try {
-          console.log("GitHub verification FAILED, sending postMessage...");
-          if (window.opener) {
-            window.opener.postMessage(
-              { type: "GITHUB_VERIFICATION_FAILED", success: false, error: "${reason.replace(/"/g, '\\"')}" },
-              "*"
-            );
-          }
-        } catch(e) { console.error("postMessage error:", e); }
-        setTimeout(function() { window.close(); }, 500);
-      </script>
-      <p>Verification failed. This window will close automatically.</p>
-      </body></html>
-    `);
-  };
-
-  try {
-    const { code, state } = req.query;
-    const storedState = req.cookies?.github_oauth_state;
-
-    // 1. Validate state (CSRF protection)
-    if (!code || !state || !storedState || state !== storedState) {
-      return sendError("State mismatch or missing authorization code");
-    }
-
-    // Clear state cookie immediately
-    res.clearCookie("github_oauth_state");
-
-    // 2. Exchange code for access token
     const github = new GitHub(
-      process.env.GITHUB_CLIENT_ID,
-      process.env.GITHUB_CLIENT_SECRET,
-      GITHUB_REDIRECT_URI,
-    );
+        process.env.GITHUB_CLIENT_ID,
+        process.env.GITHUB_CLIENT_SECRET,
+        `http://localhost:8000/github/callback`
+    )
+    const { code, state } = req.query;
+    const storedState = req.cookies.github_oauth_state;
+    const handleFailedLogin = () => {
+        req.flash(
+            "errors",
+            "Couldn't authenticate with GitHub. Please try again."
+        )
+        return res.redirect("/auth/oauth");
+    }
+    if (!state || state !== storedState) {
+        return handleFailedLogin();
+    }
 
     let tokens;
     try {
-      tokens = await github.validateAuthorizationCode(code);
+        tokens = await github.validateAuthorizationCode(code);
     } catch (error) {
-      return sendError("Failed to exchange authorization code");
+        return handleFailedLogin();
     }
-
-    const accessToken = tokens.accessToken();
-
-    // 3. Identify the logged-in user via JWT cookie
-    const linkingToken =
-      req.cookies?.github_linking_token || req.cookies?.accessToken;
-    if (!linkingToken) {
-      return sendError("No user session found — please log in first");
-    }
-
-    let userId;
-    try {
-      const decoded = jwt.verify(linkingToken, process.env.ACCESS_TOKEN_SECRET);
-      userId = decoded._id;
-    } catch (error) {
-      return sendError("Invalid or expired session token");
-    }
-
-    // 4. Save ONLY the accessToken — do NOT fetch profile/repos
-    await User.findByIdAndUpdate(userId, {
-      $set: {
-        "platforms.github.accessToken": accessToken,
-        "platforms.github.oauthConnected": true,
-        "platforms.github.connectedAt": new Date(),
-      },
+    const githubUserResponse = await fetch("https://api.github.com/user",{
+        headers:{
+            Authorization: `Bearer ${tokens.accessToken()}`
+        }
+    })
+    if(!githubUserResponse.ok) return handleFailedLogin();
+    const githubUser = await githubUserResponse.json();
+    console.log(githubUser);
+    const response = await fetch("https://api.github.com/user/emails", {
+        headers: {
+            Authorization: `Bearer ${tokens.accessToken()}`,
+            Accept: "application/vnd.github+json"
+        }
     });
+    const emails = await response.json();
+    const primary = emails.find(e => e.primary && e.verified);
 
-    // Clear the linking cookie
-    res.clearCookie("github_linking_token");
+    if (!primary) {
+        console.log("No primary email found for GitHub user");
+        return handleFailedLogin();
+    }
+    
+    const primaryEmail = primary.email;
+    
+    // find user and update github token
+    const user = await User.findOneAndUpdate(
+        { email: primaryEmail },
+        {
+            $set: {
+                "platforms.github.url": `https://github.com/${githubUser.login}`,
+                "platforms.github.accessToken": tokens.accessToken(),
+                "platforms.github.oauthConnected": true,
+                "platforms.github.connectedAt": new Date()
+            }
+        },
+        { returnDocument: "after" }
+    );
+    
+    if (!user) {
+        console.log("No user found with email:", primaryEmail);
+        return handleFailedLogin();
+    }
+    
+    console.log("GitHub connected for:", user.email);
 
-    console.log("GitHub verified for userId:", userId);
-
-    // 5. Return HTML that posts success message and closes popup
-    return res.send(`
-      <html><body>
-      <script>
-        try {
-          console.log("GitHub verified! Sending postMessage to opener...");
-          if (window.opener) {
-            window.opener.postMessage(
-              { type: "GITHUB_VERIFIED", success: true },
-              "*"
-            );
-            console.log("postMessage sent successfully");
-          } else {
-            console.error("No window.opener available");
-          }
-        } catch(e) { console.error("postMessage error:", e); }
-        setTimeout(function() { window.close(); }, 500);
-      </script>
-      <p>GitHub verified! This window will close automatically.</p>
-      </body></html>
-    `);
-  } catch (error) {
-    console.error("GitHub OAuth callback unhandled error:", error);
-    return sendError("Internal server error");
-  }
-};
+    res.redirect(`${process.env.FRONTEND_URL}/auth/oauth?github=success`);
+}
 
 // ─────────────────────────────────────────────────────────
 //  GET /github/disconnect  →  Clear GitHub data

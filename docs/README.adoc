@@ -1,0 +1,299 @@
+= VelionAI Technical Architecture Documentation
+:toc: left
+:toclevels: 5
+:sectnums:
+:source-highlighter: highlight.js
+:icons: font
+
+== Executive Overview
+
+**VelionAI** is an advanced enterprise SaaS platform designed to generate and visualize professional intelligence graphs for students and developers. By aggregating data from verified platforms (GitHub, LinkedIn, LeetCode) and utilizing AI analysis, VelionAI constructs a 3D interactive "Skills Universe" that proves a user's competence beyond a traditional resume.
+
+=== System Purpose
+To provide a verifiable, data-driven, and visually immersive representation of technical talent, bridging the gap between raw developer activity and simplified recruiter insights.
+
+=== Core Architecture Philosophy
+*   **Visual-First Intelligence**: Complex data is rendered as an interactive 3D force-directed graph.
+*   **Verifiable Truth**: Data sources are authenticated via OAuth to ensure integrity.
+*   **AI-Native**: Deep integration with LLMs for analysis and conversational intelligence.
+*   **Scalable Micro-Services Pattern**: Monolithic codebase structured for easy decomposition into microservices (Auth, Graph, Agent).
+
+== System Architecture Overview
+
+The VelionAI system operates on a modern **MERN-Next.js** hybrid architecture, referencing a widely adopted enterprise stack.
+
+=== Logical Architecture
+
+[plantuml, format="svg"]
+....
+@startuml
+skinparam componentStyle uml2
+
+package "Client Layer" {
+  [Next.js Frontend] as Client
+  [Three.js Graph Engine] as Graph
+}
+
+package "API Gateway / Backend" {
+  [Express Server] as Backend
+  [Auth Middleware] as Auth
+}
+
+package "Data & Intelligence Layer" {
+  [MongoDB Atlas] as DB
+  [OpenAI API] as AI
+  [n8n Automation] as Workflow
+  [GitHub API] as GitHub
+}
+
+Client <--> Backend : REST / SSE
+Client --> Graph : Renders
+Backend --> DB : Mongoose ODM
+Backend --> AI : Stream Chat
+Backend --> GitHub : OAuth / Repos
+Backend --> Workflow : Graph Gen Webhook
+@enduml
+....
+
+=== Runtime Architecture
+*   **Frontend**: Next.js 15 (App Router) served via Vercel/Node.
+*   **Backend**: Node.js/Express server (Stateless API).
+*   **Database**: MongoDB Atlas (Replica Set).
+*   **AI Engine**: OpenAI GPT-4o via streaming server-sent events (SSE).
+*   **Graph Engine**: n8n workflow engine for heavy data processing.
+
+== Technology Stack Documentation
+
+=== Frontend
+*   **Next.js 15**: selected for Server-Side Rendering (SSR) capabilities, SEO optimization, and robust routing.
+*   **React 19**: Core UI library.
+*   **Tailwind CSS**: Utility-first styling for rapid, consistent design capability.
+*   **Framer Motion & GSAP**: High-performance animation libraries for "god-tier" UI feel.
+*   **Three.js / React-Force-Graph**: WebGL-based 3D rendering engine for the skills universe.
+*   **Lucide React**: Consistent iconography.
+
+=== Backend
+*   **Node.js**: Event-driven runtime efficient for I/O heavy operations (API calls).
+*   **Express.js**: Minimalist web framework for routing and middleware.
+*   **MongoDB & Mongoose**: NoSQL database for flexible schema design (nested graph structures) and rapid iteration.
+*   **JWT (JSON Web Tokens)**: Stateless authentication mechanism.
+*   **Arctic / Google APIs**: OAuth flow management.
+
+== Backend Architecture
+
+The backend is structured as a **Controller-Service-Model** pattern within an Express application.
+
+=== Key Directories
+*   `server/controllers`: Contains business logic and request handling.
+*   `server/routes`: Defines API endpoints and maps them to controllers.
+*   `server/models`: Mongoose schema definitions.
+*   `server/middleware`: Interceptors for auth, error handling, etc.
+
+=== Request Lifecycle
+1.  **Entry**: `server/app.js` receives request.
+2.  **Middlewares**: CORS security, JSON parsing, Cookie parsing.
+3.  **Routing**: Dispatched to specific route module (e.g., `user.route.js`).
+4.  **Auth Guard** (Optional): `verifyJWT` middleware checks access token.
+5.  **Controller**: Executes logic, calls DB/Services.
+6.  **Response**: Sends standardized `ApiResponse` JSON.
+
+== Authentication Architecture
+
+VelionAI uses a dual-token **JWT Authentication** strategy for maximum security and user experience.
+
+=== Tokens
+*   **Access Token**: Short-lived (15m), signed with `ACCESS_TOKEN_SECRET`. Stored in HTTP-only cookie.
+*   **Refresh Token**: Long-lived (30d), signed with `REFRESH_TOKEN_SECRET`. Stored in DB and HTTP-only cookie.
+
+=== Registration Flow (`/api/auth/register`)
+1.  User submits email, name, password.
+2.  **Encryption**: Password hashed using `bcryptjs`.
+3.  **Storage**: User created in MongoDB. Platform URLs stored as unverified.
+4.  **Auto-Login**: Tokens generated and set as cookies immediately.
+
+=== Login Flow (`/api/auth/login`)
+1.  Validate email/password (`bcrypt.compare`).
+2.  Generate Access & Refresh tokens.
+3.  Save Refresh token hash to DB.
+4.  Send cookies (`httpOnly`, `secure`, `sameSite`).
+
+== GitHub OAuth Architecture
+
+Implementation of verify-only OAuth flow to prove ownership of GitHub accounts.
+
+=== Endpoints
+*   `GET /github/oauth`: Initiates flow.
+*   `GET /github/callback`: Handles return from GitHub.
+
+=== Detailed Flow
+1.  **Initiation**:
+    *   Frontend calls `/github/oauth` (via popup).
+    *   Backend generates `state` for CSRF protection.
+    *   Backend maps current user session via `github_linking_token` cookie.
+    *   Redirects to GitHub Authorization URL.
+
+2.  **Callback**:
+    *   GitHub redirects to `/github/callback` with `code` and `state`.
+    *   **Validation**: Backend validates `state` matching cookie.
+    *   **Exchange**: Code exchanged for `accessToken` (no scope/read-only).
+    *   **Identification**: User identified via `github_linking_token` JWT.
+    *   **Persistence**: `accessToken` saved to `user.platforms.github.accessToken`.
+    *   **Completion**: Backend returns HTML with `<script>` to post message to frontend.
+
+== Database Architecture
+
+MongoDB is used for its document-oriented nature, perfect for storing the nested and variable structure of a Knowledge Graph.
+
+=== User Schema (`models/User.model.js`)
+The core collection. Key fields:
+
+*   `personal`: `name`, `email`, `password` (hashed), `avatar`, `role`, `institute`.
+*   `platforms`: Nested object storing connection states.
+    *   `github`: `{ url, accessToken, oauthConnected, repos[], connectedAt }`
+    *   `notion`: `{ workspaceId, botId, oauthConnected }`
+*   `skills`: **The Knowledge Graph**
+    *   `nodes`: Array of `{ id, type, displayName, metrics: { level, confidence... }, visuals }`
+    *   `links`: Array of `{ source, target, strengthValue }`
+    *   `visualConfig`: Settings for frontend graph renderer (`nodeSize`, `glowIntensity`).
+    *   `futurePotential`: AI-suggested learning paths.
+
+== Skills Graph Architecture
+
+The graph is the heart of VelionAI, generated via an AI workflow.
+
+=== Components
+1.  **Nodes**: Represent entities (User, Skill, Project, Domain).
+    *   *Properties*: `level` (0-100), `experienceYears`, `colorHex`.
+2.  **Links**: Represent relationships (MASTERY, AUTHORSHIP, USES).
+    *   *Properties*: `strength` (line thickness), `distance`.
+3.  **Generation**:
+    *   Triggered via `graph.controller.js`.
+    *   Sends user data (GitHub repos) to **n8n webhook**.
+    *   n8n processes data via LLM to extract skills and relationships.
+    *   Returns JSON graph structure.
+
+== API Architecture
+
+RESTful API principles. All responses follow a standard envelope.
+
+=== Standard Response Wrapper
+```json
+{
+  "statusCode": 200,
+  "data": { ... },
+  "message": "Success message",
+  "success": true
+}
+```
+
+=== Key Endpoints
+
+==== Auth
+*   `POST /api/auth/register`: Create account.
+*   `POST /api/auth/login`: Authenticate.
+*   `POST /api/auth/logout`: Clear cookies.
+*   `POST /api/auth/refresh-token`: Rotate access token.
+
+==== User
+*   `GET /api/user/me`: Get current profile.
+*   `PATCH /api/user/update`: Update profile fields.
+
+==== Agent
+*   `POST /api/agent/chat`: Stream SSE chat response from AI.
+*   `GET /api/agent/history`: Get previous conversation threads.
+
+==== Graph
+*   `POST /api/graph/generate/:userId`: Trigger AI graph generation.
+
+== Frontend Architecture
+
+The frontend is a **Next.js 15 App Router** application.
+
+=== Directory Structure
+*   `app/`: Routes and pages.
+    *   `onboarding/`: Multi-step onboarding flow.
+    *   `graph/`: 3D visualization page.
+    *   `auth/`: Login/Register pages.
+*   `components/`: Reusable UI bricks.
+    *   `landing/`: Marketing page components.
+    *   `ui/`: Base design system elements.
+*   `contexts/`: Global state (`OnboardingContext`).
+
+=== Key Technologies
+*   **Three.js / SpriteText**: Used in `app/graph/page.tsx` for 3D text labels.
+*   **Framer Motion**: Used for complex page transitions and component entry.
+*   **GSAP**: Used for high-performance scroll triggers.
+
+== OAuth Popup Architecture
+
+A specialized flow for non-disruptive social connection.
+
+1.  **Trigger**: User clicks "Verify GitHub" in Onboarding Step 3.
+2.  **Action**: `window.open(BACKEND_URL + '/github/oauth', ...)` opens popup.
+3.  **Communication**:
+    *   Popup completes Oauth flow.
+    *   Backend sends response HTML.
+    *   JS in popup executes: `window.opener.postMessage({ type: 'GITHUB_VERIFIED', success: true }, '*')`.
+4.  **Reception**:
+    *   `Step3_Connections.tsx` listens via `window.addEventListener('message')`.
+    *   Validates message type.
+    *   Updates React state `verified.github = true`.
+
+== Security Architecture
+
+*   **CSRF Protection**:
+    *   OAuth state parameter validation (`github_oauth_state` cookie).
+    *   `SameSite=Lax` cookie policy.
+*   **XSS Protection**:
+    *   `httpOnly` cookies prevent JS access to tokens.
+    *   React's auto-escaping.
+*   **Origin Validation**:
+    *   CORS configured in `app.js` whitelist (`localhost:3000`, `localhost:5173`).
+    *   `postMessage` listeners check origins (though currently wildcard allowed for reliability).
+*   **Data Integrity**:
+    *   Mongoose validators (required fields, unique email).
+    *   Password hashing (Bcrypt cost factor 10).
+
+== Scalability Architecture
+
+*   **Stateless Backend**: The Express server stores no session state (relies on JWT). Can be horizontally scaled behind a load balancer.
+*   **External AI/Graph**: Intense compute (graph generation) is offloaded to n8n and OpenAI, preventing main thread blocking.
+*   **Database**: MongoDB Atlas handles sharding and scaling automatically.
+
+== Deployment Architecture
+
+=== Environment Configuration (`.env`)
+Required variables:
+*   `PORT`: Server port.
+*   `MONGODB_URI`: Atlas connection string.
+*   `ACCESS_TOKEN_SECRET` / `REFRESH_TOKEN_SECRET`: JWT signing keys.
+*   `GITHUB_CLIENT_ID` / `SECRET`: OAuth credentials.
+*   `FRONTEND_URL`: For CORS and redirects.
+
+=== Startup
+*   **Dev**: `npm run dev` (concurrently runs client/server).
+*   **Prod**: `npm start` (node index.js).
+
+== Developer Onboarding Guide
+
+1.  **Prerequisites**: Node.js v18+, MongoDB URI, GitHub App credentials.
+2.  **Setup**:
+    ```bash
+    git clone <repo>
+    cd skillscape
+    npm install
+    cd server && npm install
+    ```
+3.  **Environment**:
+    *   Create `.env.local` in root.
+    *   Create `.env` in `server/`.
+4.  **Running**:
+    *   `npm run dev` in root starts both server (5000/8000) and client (3000).
+
+== Future Architecture Roadmap
+
+1.  **Microservices Split**: Extract `Graph Service` and `Agent Service` into separate deployments.
+2.  **Redis Caching**: Cache generated graphs to reduce n8n/database load.
+3.  **GraphRAG**: Implement Graph Retrieval-Augmented Generation for the AI Agent to "see" the graph structure during chat.
+4.  **Real-Time Collaboration**: WebSockets for live graph editing.
+
