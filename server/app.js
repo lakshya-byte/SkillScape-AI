@@ -14,6 +14,7 @@ import resetPasswordRouter from "./routes/resetPassword.route.js";
 import agentRouter from "./routes/agent.route.js";
 import roadmapRouter from "./routes/roadmap.route.js";
 import chatRouter from "./routes/chat.route.js";
+import leaderboardRouter from "./routes/leaderboard.route.js";
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.use("/notion", notionRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/roadmaps", roadmapRouter);
 app.use("/api/chats", chatRouter);
+app.use("/api/leaderboard", leaderboardRouter);
 
 app.use(errorHandler);
 
