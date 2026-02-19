@@ -41,13 +41,13 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <Navbar />
-        <SmoothScrollProvider>
-          <PreloaderProvider>
-            {/* <Preloader /> */}
+          <SmoothScrollProvider>
+            <PreloaderProvider>
+              {/* <Preloader /> */}
 
-            {children}
-          </PreloaderProvider>
-        </SmoothScrollProvider>
+              {children}
+            </PreloaderProvider>
+          </SmoothScrollProvider>
         <Footer />
         <VelionAIAssistant />
       </body>

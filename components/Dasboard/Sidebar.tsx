@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
+import { useUser } from "@/contexts/UserContext";
 
 /* ─── Nav item types ─────────────────────────────────────────────────────── */
 interface NavItem {
@@ -55,6 +56,23 @@ const NAV_ITEMS: NavItem[] = [
 const Sidebar: React.FC = () => {
     const [active, setActive] = useState("deep-project");
     const [isOpen, setIsOpen] = useState(false);
+    const { user, loading } = useUser();
+
+    const getUserInitials = (name: string) => {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    };
+
+    const getAvatarStyle = (name: string) => {
+        const colors = [
+            "linear-gradient(135deg, #f59e0b, #d97706)",
+            "linear-gradient(135deg, #7c3aed, #6d28d9)",
+            "linear-gradient(135deg, #06b6d4, #0891b2)",
+            "linear-gradient(135deg, #10b981, #059669)",
+            "linear-gradient(135deg, #f43f5e, #e11d48)"
+        ];
+        const index = name.charCodeAt(0) % colors.length;
+        return colors[index];
+    };
 
     return (
         <>
@@ -138,23 +156,47 @@ const Sidebar: React.FC = () => {
 
                 {/* User profile */}
                 <div className="px-3 py-4 border-t border-white/[0.06]">
-                    <button className="w-full flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-white/[0.04] transition-colors group">
-                        {/* Avatar */}
-                        <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[13px]"
-                            style={{ background: "linear-gradient(135deg, #f59e0b, #d97706)" }}
-                        >
-                            A
+                    {loading ? (
+                        <div className="animate-pulse">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-gray-700 rounded-full"></div>
+                                <div className="flex-1">
+                                    <div className="h-3 bg-gray-700 rounded w-3/4 mb-1"></div>
+                                    <div className="h-2 bg-gray-700 rounded w-1/2"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="flex-1 min-w-0 text-left">
-                            <p className="text-[12px] font-mono font-bold text-white truncate">Alex Morgan</p>
-                            <p className="text-[10px] font-mono text-violet-400 truncate">Pro Member</p>
+                    ) : user ? (
+                        <button className="w-full flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-white/[0.04] transition-colors group">
+                            {/* Avatar */}
+                            {user.avatar ? (
+                                <img
+                                    src={user.avatar}
+                                    alt={user.name}
+                                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                                />
+                            ) : (
+                                <div
+                                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-white font-bold text-[13px]"
+                                    style={{ background: getAvatarStyle(user.name) }}
+                                >
+                                    {getUserInitials(user.name)}
+                                </div>
+                            )}
+                            <div className="flex-1 min-w-0 text-left">
+                                <p className="text-[12px] font-mono font-bold text-white truncate">{user.name}</p>
+                                <p className="text-[10px] font-mono text-violet-400 truncate">{user.role}</p>
+                            </div>
+                            {/* Chevron */}
+                            <svg className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                    ) : (
+                        <div className="text-center text-gray-500 text-[10px]">
+                            User not found
                         </div>
-                        {/* Chevron */}
-                        <svg className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+                    )}
                 </div>
             </aside>
         </>

@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react";
+import { useUser } from "@/contexts/UserContext";
 
 interface StatCardProps {
   label: string;
@@ -34,17 +35,49 @@ const StatCard: React.FC<StatCardProps> = ({ label, value, sub, subColor = "text
 );
 
 const HeroStats: React.FC = () => {
+  const { user, loading, error } = useUser();
+
+  if (loading) {
+    return (
+      <section className="w-full">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-700 rounded w-1/3 mb-4"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 bg-gray-700 rounded-xl"></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || !user) {
+    return (
+      <section className="w-full">
+        <div className="text-center py-8">
+          <p className="text-red-400">Failed to load user data</p>
+        </div>
+      </section>
+    );
+  }
+
+  const firstName = user.name.split(' ')[0];
+  const repoCount = user.platforms.github?.repos?.length || 0;
+  const connectedPlatforms = Object.values(user.platforms).filter(p => 
+    typeof p === 'object' ? p.oauthConnected : p
+  ).length;
+
   return (
     <section className="w-full">
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>
           <h1 className="font-display text-[28px] font-extrabold text-white mb-1">
-            Welcome Back, <span className="text-violet-400">Alex</span>
+            Welcome Back, <span className="text-violet-400">{firstName}</span>
           </h1>
           <p className="text-[12px] font-mono text-gray-500">
-            Your technical intelligence has evolved by{" "}
-            <span className="text-emerald-400 font-bold">12.4%</span> this week.
+            {user.role} at {user.institute || 'Unknown Institute'} • {connectedPlatforms} platforms connected
           </p>
         </div>
         <div className="flex gap-2">
@@ -66,12 +99,12 @@ const HeroStats: React.FC = () => {
       {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard
-          label="Total Skills"
-          value="142"
-          sub="+3 new"
+          label="Connected Platforms"
+          value={connectedPlatforms.toString()}
+          sub="/ 5 available"
           subColor="text-violet-400"
           barColor="bg-violet-500"
-          barWidth="72%"
+          barWidth={`${(connectedPlatforms / 5) * 100}%`}
           icon={
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -79,12 +112,12 @@ const HeroStats: React.FC = () => {
           }
         />
         <StatCard
-          label="Projects Analyzed"
-          value="28"
-          sub="4 active"
-          subColor="text-blue-400"
+          label="GitHub Repositories"
+          value={repoCount.toString()}
+          sub={user.platforms.github?.oauthConnected ? "Connected" : "Not connected"}
+          subColor={user.platforms.github?.oauthConnected ? "text-blue-400" : "text-gray-400"}
           barColor="bg-blue-500"
-          barWidth="56%"
+          barWidth={user.platforms.github?.oauthConnected ? "56%" : "0%"}
           icon={
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -92,12 +125,12 @@ const HeroStats: React.FC = () => {
           }
         />
         <StatCard
-          label="Dominant Language"
-          value="Python"
-          sub="85% affinity"
+          label="Account Type"
+          value={user.role}
+          sub="Member"
           subColor="text-yellow-400"
           barColor="bg-yellow-500"
-          barWidth="85%"
+          barWidth="75%"
           icon={
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
@@ -105,12 +138,12 @@ const HeroStats: React.FC = () => {
           }
         />
         <StatCard
-          label="Skill Growth"
-          value="+12%"
-          sub="MoM"
+          label="Profile Completion"
+          value="85%"
+          sub="Good"
           subColor="text-emerald-400"
           barColor="bg-emerald-500"
-          barWidth="88%"
+          barWidth="85%"
           icon={
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
