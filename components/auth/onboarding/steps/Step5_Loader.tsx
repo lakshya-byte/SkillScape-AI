@@ -28,37 +28,117 @@ export default function Step5_Loader() {
 
   const [progress, setProgress] = useState(0);
   const [activeStage, setActiveStage] = useState(0);
+  const [error, setError] = useState<string | null>(null);
 
   // Total duration of the initialization sequence (in ms)
   const DURATION = 6000;
 
   useEffect(() => {
-    const startTime = Date.now();
+    let interval: ReturnType<typeof setInterval>;
 
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const p = Math.min((elapsed / DURATION) * 100, 100);
+    const registerAndAnimate = async () => {
+      // ── 1. Call the register API ──────────────────────────
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/register", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: userData.name,
+            email: userData.email,
+            password: userData.password,
+            institute: userData.institute,
+            avatar: userData.avatarId
+              ? `/avatars/${userData.avatarId}.png`
+              : "",
+            links: {
+              github: userData.links.github,
+              linkedin: userData.links.linkedin,
+              leetcode: userData.links.leetcode,
+              behance: userData.links.behance,
+            },
+          }),
+        });
 
-      setProgress(p);
+        const data = await res.json();
 
-      // Update stages based on progress milestones
-      if (p > 15) setActiveStage(1); // Identity done
-      if (p > 40) setActiveStage(2); // Permissions done
-      if (p > 75) setActiveStage(3); // Vector DB done
-      if (p >= 100) {
-        clearInterval(interval);
-        // Auto-navigate to completion screen
-        setTimeout(() => {
-          router.push("/onboarding/complete");
-        }, 800);
+        if (!res.ok) {
+          setError(data?.message || "Registration failed. Please try again.");
+          return;
+        }
+      } catch (err) {
+        setError("Could not connect to server. Please check your connection.");
+        return;
       }
-    }, 50);
 
-    return () => clearInterval(interval);
+      // ── 2. Start the progress animation (only on success) ─
+      const startTime = Date.now();
+
+      interval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const p = Math.min((elapsed / DURATION) * 100, 100);
+
+        setProgress(p);
+
+        // Update stages based on progress milestones
+        if (p > 15) setActiveStage(1); // Identity done
+        if (p > 40) setActiveStage(2); // Permissions done
+        if (p > 75) setActiveStage(3); // Vector DB done
+        if (p >= 100) {
+          clearInterval(interval);
+          // Auto-navigate to completion screen
+          setTimeout(() => {
+            router.push("/onboarding/complete");
+          }, 800);
+        }
+      }, 50);
+    };
+
+    registerAndAnimate();
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, []);
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center relative">
+      {/* ERROR STATE OVERLAY */}
+      {error && (
+        <motion.div
+          className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#050508]/95 backdrop-blur-xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <div className="max-w-md text-center space-y-6 p-8">
+            <div className="w-16 h-16 mx-auto bg-red-500/10 rounded-2xl flex items-center justify-center border border-red-500/20">
+              <span className="text-red-400 text-3xl">!</span>
+            </div>
+            <h3 className="text-xl font-bold text-white">
+              Registration Failed
+            </h3>
+            <p className="text-sm text-slate-400">{error}</p>
+            <div className="flex gap-3 justify-center pt-2">
+              <button
+                onClick={() => router.push("/onboarding/identity")}
+                className="px-6 py-2.5 rounded-full text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 border border-white/10 transition-all"
+              >
+                Go Back
+              </button>
+              <button
+                onClick={() => {
+                  setError(null);
+                  window.location.reload();
+                }}
+                className="px-6 py-2.5 rounded-full text-sm font-bold bg-purple-600 hover:bg-purple-500 text-white shadow-lg transition-all"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       {/* 1. TOP RIGHT STATUS (Absolute) */}
       <div className="absolute top-0 right-0 flex items-center gap-2">
         <span className="text-[10px] font-mono text-slate-500 tracking-widest uppercase">

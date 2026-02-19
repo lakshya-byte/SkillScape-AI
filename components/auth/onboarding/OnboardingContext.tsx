@@ -23,12 +23,21 @@ const ONBOARDING_ROUTES = [
 export const TOTAL_STEPS = ONBOARDING_ROUTES.length;
 
 // ─── Types ──────────────────────────────────────────────────────
+type Links = {
+  github: string;
+  linkedin: string;
+  leetcode: string;
+  behance: string;
+};
+
 type UserData = {
   name: string;
   email: string;
-  org: string;
+  password: string;
+  institute: string;
   avatarId: string | null;
   skills: string[];
+  links: Links;
 };
 
 type OnboardingContextType = {
@@ -62,9 +71,11 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const [userData, setUserData] = useState<UserData>({
     name: "",
     email: "",
-    org: "",
+    password: "",
+    institute: "",
     avatarId: null,
     skills: [],
+    links: { github: "", linkedin: "", leetcode: "", behance: "" },
   });
 
   const updateUserData = (data: Partial<UserData>) => {
@@ -91,7 +102,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const isStepValid = () => {
     switch (step) {
       case 1:
-        return !!userData.name && !!userData.email;
+        return !!userData.name && !!userData.email && !!userData.password;
       case 2:
         return !!userData.avatarId;
       case 4:
