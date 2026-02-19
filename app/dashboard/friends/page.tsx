@@ -4,9 +4,9 @@ import React from "react";
 import { UserProvider } from "@/contexts/UserContext";
 import Sidebar from "@/components/Dasboard/Sidebar";
 import Navbar from "@/components/landing/navbar/Navbar";
-import NeuralOpsDashboard from "@/components/neural-ops/NeuralOpsDashboard";
+import FriendsPage from "@/components/friends/FriendsPage";
 
-const NeuralOpsPage: React.FC = () => {
+const FriendsDashboardPage: React.FC = () => {
   return (
     <UserProvider>
       <div className="min-h-screen flex" style={{ background: "#0a0a10" }}>
@@ -29,7 +29,7 @@ const NeuralOpsPage: React.FC = () => {
 
           {/* Scrollable content */}
           <div className="relative z-10 px-4 md:px-8 md:ml-[210px] pt-24 md:pt-20 pb-7 flex flex-col gap-5 mx-auto pl-40">
-            <NeuralOpsDashboard />
+            <FriendsPage />
           </div>
         </div>
       </div>
@@ -37,4 +37,4 @@ const NeuralOpsPage: React.FC = () => {
   );
 };
 
-export default NeuralOpsPage;
+export default FriendsDashboardPage;
