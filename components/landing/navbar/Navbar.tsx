@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import React, { useState, useEffect } from "react";
 import NavLogo from "./NavLogo";
 import NavLinks from "./NavLinks";
@@ -13,6 +15,8 @@ export default function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
+
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,10 +52,9 @@ export default function Navbar() {
           shadow-[0_8px_32px_0_rgba(0,0,0,0.36)]
           backdrop-blur-[12px]
           
-          ${
-            isScrolled
-              ? "top-2 px-5 rounded-full bg-black/60 w-[90%] max-w-5xl" // Scrolled: Capsule
-              : "top-6  px-8 rounded-2xl bg-black/40 w-[95%] max-w-7xl" // Top: Hero Wide
+          ${isScrolled
+            ? "top-2 px-5 rounded-full bg-black/60 w-[90%] max-w-5xl" // Scrolled: Capsule
+            : "top-6  px-8 rounded-2xl bg-black/40 w-[95%] max-w-7xl" // Top: Hero Wide
           }
         `}
       >

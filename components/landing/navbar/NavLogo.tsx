@@ -46,7 +46,7 @@ const NavLogo: React.FC<NavLogoProps> = ({ isScrolled }) => {
             `}
             priority
           /> */}
-           <p className="font-bold w-full">Velio AI</p>
+           <p className="font-bold w-full">Velion AI</p>
         </div>
 
         {/* 2. LOGO TEXT

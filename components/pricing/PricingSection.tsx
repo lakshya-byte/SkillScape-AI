@@ -11,17 +11,17 @@ export default function PricingSection() {
   const [billingCycle, setBillingCycle] = useState<BillingCycle>('monthly');
 
   return (
-    <section className="relative min-h-screen bg-[#050507] overflow-hidden py-24 md:py-32 selection:bg-purple-500/30">
-      
+    <section className="relative min-h-screen bg-[#050507] py-24 md:py-32 selection:bg-purple-500/30">
+
       {/* 1. Ambient Background Effects (The "God Rays") */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-purple-900/20 blur-[120px] rounded-full mix-blend-screen pointer-events-none" />
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none mix-blend-overlay" />
-      
+
       <div className="max-w-[1400px] mx-auto px-6 relative z-10">
-        
+
         {/* 2. Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -33,8 +33,8 @@ export default function PricingSection() {
             </span>
             V2.0 NEURAL ARCHITECTURE LIVE
           </motion.div>
-          
-          <motion.h2 
+
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -42,19 +42,19 @@ export default function PricingSection() {
             className="text-4xl md:text-6xl md:leading-tight font-bold text-white tracking-tight mb-6"
           >
             Initialize Your <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-violet-400 to-indigo-400">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-400 via-violet-400 to-indigo-400">
               Intelligence Stack
             </span>
           </motion.h2>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             className="text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto"
           >
-            Choose the computational power required to architect the future. 
+            Choose the computational power required to architect the future.
             Upgrade your neural capacity today.
           </motion.p>
         </div>
@@ -72,7 +72,7 @@ export default function PricingSection() {
         {/* 4. The Grid (Pricing Cards) */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 lg:gap-6 items-start">
           {PRICING_TIERS.map((tier, index) => (
-            <PricingCard 
+            <PricingCard
               key={tier.id}
               tier={tier}
               billingCycle={billingCycle}
