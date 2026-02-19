@@ -7,13 +7,14 @@ import authRouter from "./routes/auth.route.js"
 import userRouter from "./routes/user.route.js"
 import githubRouter from "./routes/github.route.js"
 import notionRouter from "./routes/notion.route.js"
+import paymentRouter from "./routes/payment.route.js"
 
 const app = express();
 
 app.set("trust proxy", 1);
 app.use(
 	cors({
-		origin: ["http://localhost:5173"],
+		origin: ["http://localhost:5173", "http://localhost:3000"],
 		credentials: true,
 	})
 );
@@ -26,8 +27,9 @@ app.use(cookieParser());
 
 app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
-app.use("/api/github",githubRouter)
-app.use("/api/notion",notionRouter)
+app.use("/github",githubRouter)
+app.use("/notion",notionRouter)
+app.use("/api/payments", paymentRouter)
 
 
 app.use(errorHandler);
