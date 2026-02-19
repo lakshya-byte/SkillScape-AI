@@ -17,7 +17,13 @@ interface NavItem {
 
 /* ─── Icons ─────────────────────────────────────────────────────── */
 const IconDeepProject = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+  <svg
+    className="w-4 h-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+  >
     <path d="M12 2L2 7l10 5 10-5-10-5z" />
     <path d="M2 17l10 5 10-5" />
     <path d="M2 12l10 5 10-5" />
@@ -25,14 +31,26 @@ const IconDeepProject = () => (
 );
 
 const IconAIInsight = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+  <svg
+    className="w-4 h-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+  >
     <circle cx="12" cy="12" r="10" />
     <path d="M12 8v4l3 3" />
   </svg>
 );
 
 const IconNeuralOps = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+  <svg
+    className="w-4 h-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+  >
     <rect x="3" y="3" width="7" height="7" />
     <rect x="14" y="3" width="7" height="7" />
     <rect x="3" y="14" width="7" height="7" />
@@ -40,14 +58,41 @@ const IconNeuralOps = () => (
   </svg>
 );
 
+const IconFriends = () => (
+  <svg
+    className="w-4 h-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+  >
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
 const IconLeaderboard = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+  <svg
+    className="w-4 h-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+  >
     <path d="M8 21V10M12 21V3M16 21v-7" />
   </svg>
 );
 
 const IconMission = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+  <svg
+    className="w-4 h-4"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.8}
+  >
     <path d="M12 2L2 7l10 5 10-5-10-5z" />
     <path d="M12 12v10" />
   </svg>
@@ -73,6 +118,12 @@ const NAV_ITEMS: NavItem[] = [
     label: "Neural Ops",
     icon: <IconNeuralOps />,
     href: "/dashboard/neural-ops",
+  },
+  {
+    id: "friends",
+    label: "Friends",
+    icon: <IconFriends />,
+    href: "/dashboard/friends",
   },
   {
     id: "technical-intelligence",
@@ -130,7 +181,12 @@ const Sidebar: React.FC = () => {
   const isActive = (href: string) => pathname === href;
 
   const getUserInitials = (name: string) =>
-    name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+    name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
 
   const getAvatarStyle = (name: string) => {
     const colors = [
@@ -138,7 +194,7 @@ const Sidebar: React.FC = () => {
       "linear-gradient(135deg, #7c3aed, #6d28d9)",
       "linear-gradient(135deg, #06b6d4, #0891b2)",
       "linear-gradient(135deg, #10b981, #059669)",
-      "linear-gradient(135deg, #f43f5e, #e11d48)"
+      "linear-gradient(135deg, #f43f5e, #e11d48)",
     ];
     return colors[name.charCodeAt(0) % colors.length];
   };
@@ -166,7 +222,7 @@ const Sidebar: React.FC = () => {
       >
         {/* Navigation */}
         <nav className="flex-1 px-2 pt-6 pb-4 flex flex-col gap-1 overflow-y-auto">
-          {NAV_ITEMS.map(item => (
+          {NAV_ITEMS.map((item) => (
             <React.Fragment key={item.id}>
               {item.section && (
                 <p className="text-[9px] font-mono text-gray-600 uppercase tracking-[0.15em] px-3 pt-4 pb-1">
@@ -190,9 +246,7 @@ const Sidebar: React.FC = () => {
                   {item.icon}
                 </span>
 
-                <span className="text-[12px] font-mono">
-                  {item.label}
-                </span>
+                <span className="text-[12px] font-mono">{item.label}</span>
               </Link>
             </React.Fragment>
           ))}

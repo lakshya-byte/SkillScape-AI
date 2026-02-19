@@ -41,84 +41,96 @@ export default function ProfilePage({
   const [error, setError] = useState<string | null>(null);
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
 
+  // Raw platform data from backend (for SocialLinksCard verify flow)
+  const [rawPlatforms, setRawPlatforms] = useState<any>(null);
+
   // --- Fetch user data from backend ---
+  const mapUserToProfile = (u: any): UserProfile => ({
+    id: u._id,
+    name: u.name || "Agent",
+    handle: `@${(u.name || "agent").toLowerCase().replace(/\s+/g, "_")}`,
+    role: u.role || "Member",
+    bio: u.bio || "Neural intelligence operative.",
+    location: u.institute || "Unknown",
+    avatar: u.avatar || "/avatars/fallback.png",
+    banner: "",
+    level: u.stats?.level || 1,
+    xp: u.stats?.xp || 0,
+    nextLevelXp: u.stats?.nextLevelXp || 1000,
+    stats: {
+      commits: u.stats?.commits || 0,
+      reputation: u.stats?.reputation || 0,
+      streak: u.stats?.streak || 0,
+    },
+    skills: u.skills || [],
+    projects: u.projects || [],
+    badges: [],
+    socials: [
+      ...(u.platforms?.github?.url
+        ? [
+            {
+              platform: "GitHub",
+              icon: Github,
+              url: u.platforms.github.url,
+              username: u.platforms.github.url.split("/").pop() || "",
+            },
+          ]
+        : []),
+      ...(u.platforms?.linkedin
+        ? [
+            {
+              platform: "LinkedIn",
+              icon: Linkedin,
+              url: u.platforms.linkedin,
+              username: "LinkedIn",
+            },
+          ]
+        : []),
+      ...(u.platforms?.leetcode
+        ? [
+            {
+              platform: "LeetCode",
+              icon: Globe,
+              url: u.platforms.leetcode,
+              username: "LeetCode",
+            },
+          ]
+        : []),
+      ...(u.platforms?.behance
+        ? [
+            {
+              platform: "Behance",
+              icon: Globe,
+              url: u.platforms.behance,
+              username: "Behance",
+            },
+          ]
+        : []),
+    ],
+  });
+
+  const fetchUser = async () => {
+    try {
+      const res = await getMyself();
+      const u = res.data;
+      setUser(mapUserToProfile(u));
+      setRawPlatforms(u.platforms || null);
+    } catch (err: any) {
+      setError(err.message || "Failed to load profile");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await getMyself();
-        const u = res.data;
-        // Map backend user to UserProfile shape
-        setUser({
-          id: u._id,
-          name: u.name || "Agent",
-          handle: `@${(u.name || "agent").toLowerCase().replace(/\s+/g, "_")}`,
-          role: u.role || "Member",
-          bio: u.bio || "Neural intelligence operative.",
-          location: u.institute || "Unknown",
-          avatar: u.avatar || "/avatars/fallback.png",
-          banner: "",
-          level: u.stats?.level || 1,
-          xp: u.stats?.xp || 0,
-          nextLevelXp: u.stats?.nextLevelXp || 1000,
-          stats: {
-            commits: u.stats?.commits || 0,
-            reputation: u.stats?.reputation || 0,
-            streak: u.stats?.streak || 0,
-          },
-          skills: u.skills || [],
-          projects: u.projects || [],
-          badges: [],
-          socials: [
-            ...(u.platforms?.github?.url
-              ? [
-                {
-                  platform: "GitHub",
-                  icon: Github,
-                  url: u.platforms.github.url,
-                  username: u.platforms.github.url.split("/").pop() || "",
-                },
-              ]
-              : []),
-            ...(u.platforms?.linkedin
-              ? [
-                {
-                  platform: "LinkedIn",
-                  icon: Linkedin,
-                  url: u.platforms.linkedin,
-                  username: "LinkedIn",
-                },
-              ]
-              : []),
-            ...(u.platforms?.leetcode
-              ? [
-                {
-                  platform: "LeetCode",
-                  icon: Globe,
-                  url: u.platforms.leetcode,
-                  username: "LeetCode",
-                },
-              ]
-              : []),
-            ...(u.platforms?.behance
-              ? [
-                {
-                  platform: "Behance",
-                  icon: Globe,
-                  url: u.platforms.behance,
-                  username: "Behance",
-                },
-              ]
-              : []),
-          ],
-        });
-      } catch (err: any) {
-        setError(err.message || "Failed to load profile");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchUser();
   }, [params.userId]);
+
+  // Callback after GitHub verification — refetch user data from backend
+  const handleGithubVerified = () => {
+    console.log("GitHub verified — refetching user data...");
+    fetchUser();
+  };
 
   // --- GSAP Entrance Orchestration ---
   useLayoutEffect(() => {
@@ -237,31 +249,14 @@ export default function ProfilePage({
                   />
                 </div>
 
-                {/* B. Gamification Card */}
-                <div className="hero-section col-span-1 md:col-span-12 lg:col-span-4 h-full">
-                  <GamificationCard
-                    level={user.level}
-                    xp={user.xp}
-                    nextLevelXp={user.nextLevelXp}
-                    rank="Singularity Seeker"
-                  />
-                </div>
-
-                {/* C. Skills Card */}
-                <div className="bento-item col-span-1 md:col-span-6 lg:col-span-4 h-[350px]">
-                  <SkillsCard />
-                </div>
-
-                {/* D. Projects Card */}
-                <div className="bento-item col-span-1 md:col-span-6 lg:col-span-4 h-[350px]">
-                  <ProjectsCard />
-                </div>
-
-                {/* E. Social Links Card */}
-                <div className="bento-item col-span-1 md:col-span-12 lg:col-span-4 h-[350px]">
-                  <SocialLinksCard />
-                </div>
-              </div>
+          {/* E. Social Links Card */}
+          <div className="bento-item col-span-1 md:col-span-12 lg:col-span-4 h-[350px]">
+            <SocialLinksCard
+              platforms={rawPlatforms}
+              onVerified={handleGithubVerified}
+            />
+          </div>
+        </div>
 
               {/* Footer */}
               <div className="ui-shell opacity-0 mt-20 text-center border-t border-white/5 pt-8">
