@@ -27,14 +27,14 @@ const NavLogo: React.FC<NavLogoProps> = ({ isScrolled }) => {
         <div
           className={`
             relative flex items-center justify-center 
-            transition-all duration-500 
+            transition-all duration-500 w-24
             ${isScrolled ? "w-12 h-12" : "w-16 h-16"}
           `}
         >
           {/* Back Glow (Hover only) - Creates a colored atmosphere behind the logo */}
-          <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="absolute inset-0 rounded-full  bg-blue-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-          <Image
+          {/* <Image
             src="/ncs-logo.svg" // <--- PLACE YOUR SVG FILE IN THE PUBLIC FOLDER
             alt="NCS Logo"
             width={20}
@@ -45,7 +45,8 @@ const NavLogo: React.FC<NavLogoProps> = ({ isScrolled }) => {
               group-hover:scale-110 group-hover:brightness-125 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]
             `}
             priority
-          />
+          /> */}
+           <p className="font-bold w-full">Velio AI</p>
         </div>
 
         {/* 2. LOGO TEXT
