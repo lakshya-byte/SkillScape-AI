@@ -345,17 +345,10 @@ export default function Step3_Connections() {
 
         <motion.button
           onClick={() => handleContinue()}
-          disabled={!isAnyConnected}
-          className={`relative px-8 py-3.5 rounded-full text-sm font-bold tracking-wide transition-all duration-300 flex items-center gap-2 overflow-hidden ${
-            isAnyConnected
-              ? "text-white shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] hover:scale-105"
-              : "bg-white/5 text-slate-600 cursor-not-allowed"
-          }`}
-          whileTap={isAnyConnected ? { scale: 0.98 } : {}}
+          className="relative px-8 py-3.5 rounded-full text-sm font-bold tracking-wide transition-all duration-300 flex items-center gap-2 overflow-hidden text-white shadow-[0_0_20px_rgba(124,58,237,0.4)] hover:shadow-[0_0_30px_rgba(124,58,237,0.6)] hover:scale-105"
+          whileTap={{ scale: 0.98 }}
         >
-          {isAnyConnected && (
-            <div className="absolute inset-0 bg-gradient-to-r from-[#7C3AED] to-[#6D28D9]" />
-          )}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#7C3AED] to-[#6D28D9]" />
           <span className="relative z-10">Continue</span>
           <ArrowRight size={16} className="relative z-10" />
         </motion.button>

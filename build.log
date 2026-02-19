@@ -6,18 +6,46 @@
 - Environments: .env.local
 
   Creating an optimized production build ...
-✓ Compiled successfully in 9.2s
+✓ Compiled successfully in 10.2s
   Running TypeScript ...
-Failed to compile.
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/28) ...
+  Generating static pages using 15 workers (7/28) 
+  Generating static pages using 15 workers (14/28) 
+  Generating static pages using 15 workers (21/28) 
+✓ Generating static pages using 15 workers (28/28) in 547.3ms
+  Finalizing page optimization ...
 
-./components/profile/SkillsCard.tsx:51:29
-Type error: Type 'number' is not assignable to type 'never'.
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /auth/login
+├ ○ /auth/oauth
+├ ○ /auth/onboarding
+├ ○ /contact
+├ ○ /dashboard
+├ ○ /dashboard/ai-insight
+├ ○ /dashboard/analysis
+├ ○ /dashboard/leaderboard
+├ ○ /dashboard/mission
+├ ○ /dashboard/neural-ops
+├ ○ /dashboard/technical-intelligence
+├ ○ /forgot-password
+├ ○ /graph
+├ ○ /onboarding
+├ ○ /onboarding/avatar
+├ ○ /onboarding/complete
+├ ○ /onboarding/connections
+├ ○ /onboarding/identity
+├ ○ /onboarding/loader
+├ ○ /onboarding/skills
+├ ○ /onboarding/welcome
+├ ○ /pricing
+├ ƒ /profile/[userId]
+└ ○ /reset-password
 
-[0m [90m 49 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex justify-between items-end mb-2 relative z-10"[39m[33m>[39m
- [90m 50 |[39m               [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex items-center gap-2"[39m[33m>[39m
-[31m[1m>[22m[39m[90m 51 |[39m                 [33m<[39m[33mskill[39m[33m.[39micon size[33m=[39m{[35m14[39m} className[33m=[39m[32m"text-slate-500 group-hover/skill:text-white transition-colors"[39m [33m/[39m[33m>[39m
- [90m    |[39m                             [31m[1m^[22m[39m
- [90m 52 |[39m                 [33m<[39m[33mspan[39m className[33m=[39m[32m"text-sm font-semibold text-slate-300 group-hover/skill:text-white transition-colors"[39m[33m>[39m
- [90m 53 |[39m                   {skill[33m.[39mname}
- [90m 54 |[39m                 [33m<[39m[33m/[39m[33mspan[39m[33m>[39m[0m
-Next.js build worker exited with code: 1 and signal: null
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
