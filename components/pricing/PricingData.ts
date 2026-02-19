@@ -20,7 +20,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'explorer',
     name: 'Explorer',
-    price: { monthly: 0, yearly: 0 },
+    price: { monthly: 1, yearly: 6 },
     description: 'Essential neural queries for hobbyists and students exploring the basics.',
     features: [
       'Basic neural queries',
@@ -65,7 +65,7 @@ export const PRICING_TIERS: PricingTier[] = [
   {
     id: 'elite',
     name: 'Elite',
-    price: { monthly: 0, yearly: 0 }, // Custom pricing logic
+    price: { monthly: 999, yearly: 9999 }, // Custom pricing logic
     description: 'Full enterprise-grade security and on-premise deployment options.',
     features: [
       'On-premise Deployment',

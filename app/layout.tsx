@@ -6,6 +6,7 @@ import Footer from "@/components/landing/footer/Footer";
 import SmoothScrollProvider from "@/components/landing/providers/SmoothScrollProvider";
 import PreloaderProvider from "@/components/landing/providers/PreloaderProvider";
 import Preloader from "@/components/landing/preloader/Preloader";
+import VelionAIAssistant from "@/components/ai/VelionAIAssistant";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,19 +30,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    /> */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
         suppressHydrationWarning={true}
       >
         <Navbar />
-        <SmoothScrollProvider>
-          <PreloaderProvider>
-            {/* <Preloader /> */}
+          <SmoothScrollProvider>
+            <PreloaderProvider>
+              {/* <Preloader /> */}
 
-            {children}
-          </PreloaderProvider>
-        </SmoothScrollProvider>
+              {children}
+            </PreloaderProvider>
+          </SmoothScrollProvider>
         <Footer />
+        <VelionAIAssistant />
       </body>
     </html>
   );
