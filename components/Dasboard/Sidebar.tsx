@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
+import { logoutUser } from "@/lib/authApi";
 
 /* ─── Nav item types ───────────────────────────────────────────── */
 interface NavItem {
@@ -149,8 +150,33 @@ const NAV_ITEMS: NavItem[] = [
 
 const Sidebar: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [dropupOpen, setDropupOpen] = useState(false);
+  const dropupRef = useRef<HTMLDivElement>(null);
   const { user, loading } = useUser();
+
+  // Close dropup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropupRef.current && !dropupRef.current.contains(e.target as Node)) {
+        setDropupOpen(false);
+      }
+    };
+    if (dropupOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [dropupOpen]);
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      router.push("/auth");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
 
   const isActive = (href: string) => pathname === href;
 
@@ -191,9 +217,8 @@ const Sidebar: React.FC = () => {
       )}
 
       <aside
-        className={`fixed top-0 pt-20 left-0 h-full w-[220px] bg-[#0d0d14] border-r border-white/10 flex flex-col z-40 transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed top-0 pt-20 left-0 h-full w-[220px] bg-[#0d0d14] border-r border-white/10 flex flex-col z-40 transition-transform duration-300 ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
       >
         {/* Navigation */}
         <nav className="flex-1 px-2 pt-6 pb-4 flex flex-col gap-1 overflow-y-auto">
@@ -208,11 +233,10 @@ const Sidebar: React.FC = () => {
               <Link
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                  isActive(item.href)
+                className={`relative flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${isActive(item.href)
                     ? "bg-violet-600/20 border border-violet-500/30 text-white"
                     : "text-gray-500 hover:text-gray-200 hover:bg-white/5"
-                }`}
+                  }`}
               >
                 {isActive(item.href) && (
                   <span className="absolute left-0 w-[3px] h-8 bg-violet-500 rounded-r-full shadow-[0_0_8px_rgba(124,58,237,0.8)]" />
@@ -228,27 +252,59 @@ const Sidebar: React.FC = () => {
           ))}
         </nav>
 
-        {/* User Section */}
-        <div className="px-3 py-4 border-t border-white/10">
+        {/* User Section with Dropup */}
+        <div className="relative px-3 py-4 border-t border-white/10" ref={dropupRef}>
+          {/* Dropup Menu */}
+          {dropupOpen && user && (
+            <div className="absolute bottom-full left-3 right-3 mb-2 bg-[#16161f] border border-white/10 rounded-xl shadow-xl shadow-black/40 overflow-hidden z-50">
+              <Link
+                href={`/profile/${user._id}`}
+                onClick={() => { setDropupOpen(false); setIsOpen(false); }}
+                className="flex items-center gap-3 px-4 py-3 text-xs text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span className="font-medium">Profile</span>
+              </Link>
+              <div className="h-px bg-white/5" />
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-3 text-xs text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span className="font-medium">Logout</span>
+              </button>
+            </div>
+          )}
+
           {loading ? (
             <div className="animate-pulse h-8 bg-gray-700 rounded" />
           ) : user ? (
-            <div className="flex items-center gap-3">
+            <button
+              onClick={() => setDropupOpen(prev => !prev)}
+              className="w-full flex items-center gap-3 rounded-lg px-1 py-1 -mx-1 hover:bg-white/5 transition-colors cursor-pointer"
+            >
               {user.avatar ? (
                 <img
                   src={user.avatar}
-                  className="w-8 h-8 rounded-full object-cover"
+                  className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                   alt={user.name}
                 />
               ) : (
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0"
                   style={{ background: getAvatarStyle(user.name) }}
                 >
                   {getUserInitials(user.name)}
                 </div>
               )}
-              <div>
+              <div className="text-left flex-1 min-w-0">
                 <p className="text-xs text-white font-bold truncate">
                   {user.name}
                 </p>
@@ -256,7 +312,13 @@ const Sidebar: React.FC = () => {
                   {user.role}
                 </p>
               </div>
-            </div>
+              <svg
+                className={`w-3.5 h-3.5 text-gray-500 transition-transform duration-200 flex-shrink-0 ${dropupOpen ? 'rotate-180' : ''}`}
+                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}
+              >
+                <polyline points="18 15 12 9 6 15" />
+              </svg>
+            </button>
           ) : (
             <p className="text-xs text-gray-500">User not found</p>
           )}
