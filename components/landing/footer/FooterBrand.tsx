@@ -9,7 +9,7 @@ export default function FooterBrand() {
         flex
         flex-col
         items-start
-        max-w-sm
+        max-w-sm 
       "
     >
       {/* Brand Name */}
