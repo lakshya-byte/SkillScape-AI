@@ -3,6 +3,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/error.middleware.js";
 
+import friendRouter from "./routes/friend.route.js"
+import graphRouter from "./routes/graph.route.js";
 import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import githubRouter from "./routes/github.route.js";
@@ -27,8 +29,10 @@ app.use(express.urlencoded({ extended: true, limit: "20kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+app.use("/api/friends", friendRouter)
+app.use("/api/graph", graphRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/auth", resetPasswordRouter);
+app.use("/api/reset-password", resetPasswordRouter);
 app.use("/api/user", userRouter);
 app.use("/api/agent", agentRouter);
 app.use("/github", githubRouter);

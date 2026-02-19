@@ -71,11 +71,13 @@ const register = async (req, res, next) => {
       avatar,
       platforms: {
         github: {
-          url: links.github || "",
+          url: links?.github || "",
+          oauthConnected: false,
+          accessToken: null,
         },
-        behance: links.behance || "",
-        linkedin: links.linkedin || "",
-        leetcode: links.leetcode || "",
+        behance: links?.behance || "",
+        linkedin: links?.linkedin || "",
+        leetcode: links?.leetcode || "",
       },
     };
     const newUser = await User.create(data);
@@ -89,9 +91,9 @@ const register = async (req, res, next) => {
     );
 
     const options = {
-      secure: true,
+      secure: false,
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     };
 
@@ -140,9 +142,9 @@ const login = async (req, res) => {
     );
 
     const options = {
-      secure: true,
+      secure: false,
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     };
     return res
@@ -183,8 +185,8 @@ const logout = async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    sameSite: "lax",
   };
 
   return res

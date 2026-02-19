@@ -58,7 +58,7 @@ export default function PricingCard({ tier, billingCycle, index }: PricingCardPr
       }
 
       // 1. Create order on backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/payments/create-order`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/payments/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export default function PricingCard({ tier, billingCycle, index }: PricingCardPr
         order_id: order.id,
         handler: async function (response: any) {
           // 3. Verify payment on backend
-          const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/payments/verify-payment`, {
+          const verifyRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/payments/verify-payment`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

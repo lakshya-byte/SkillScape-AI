@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import {
@@ -15,8 +15,13 @@ import {
   ArrowLeft,
   X,
   Globe,
+  ShieldCheck,
+  ExternalLink,
 } from "lucide-react";
 import { useOnboarding } from "../OnboardingContext";
+
+const BACKEND_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
 
 // Platform Configuration
 const PLATFORMS = [
@@ -28,6 +33,7 @@ const PLATFORMS = [
     icon: Github,
     color: "text-white",
     bg: "bg-slate-800",
+    verifiable: true, // Has OAuth verification
   },
   {
     id: "linkedin",
@@ -37,6 +43,7 @@ const PLATFORMS = [
     icon: Linkedin,
     color: "text-blue-400",
     bg: "bg-blue-900/20",
+    verifiable: false,
   },
   {
     id: "leetcode",
@@ -46,6 +53,7 @@ const PLATFORMS = [
     icon: Code2,
     color: "text-amber-400",
     bg: "bg-amber-900/20",
+    verifiable: false,
   },
   {
     id: "behance",
@@ -55,6 +63,7 @@ const PLATFORMS = [
     icon: Palette,
     color: "text-pink-400",
     bg: "bg-pink-900/20",
+    verifiable: false,
   },
 ];
 
@@ -64,6 +73,7 @@ export default function Step3_Connections() {
 
   // State for Connections
   const [connected, setConnected] = useState<Record<string, boolean>>({});
+  const [verified, setVerified] = useState<Record<string, boolean>>({});
   const [urls, setUrls] = useState<Record<string, string>>({});
 
   // State for Modal
@@ -73,17 +83,54 @@ export default function Step3_Connections() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [tempUrl, setTempUrl] = useState("");
 
+  // ─── GitHub popup postMessage listener ───
+  const handleGithubMessage = useCallback((event: MessageEvent) => {
+    // Debug: log every message received
+    console.log(
+      "postMessage received:",
+      event.data,
+      "from origin:",
+      event.origin,
+    );
+
+    // Accept messages from backend or same origin
+    const allowedOrigins = [
+      BACKEND_URL,
+      window.location.origin,
+      "http://localhost:8000",
+      "http://localhost:3000",
+    ];
+
+    if (!allowedOrigins.includes(event.origin)) {
+      console.log("Ignored message from unknown origin:", event.origin);
+      return;
+    }
+
+    if (event.data?.type === "GITHUB_VERIFIED") {
+      console.log("✅ GitHub verification successful — updating UI state");
+      setVerified((prev) => ({ ...prev, github: true }));
+      setConnected((prev) => ({ ...prev, github: true }));
+    }
+
+    if (event.data?.type === "GITHUB_VERIFICATION_FAILED") {
+      console.error("❌ GitHub verification failed:", event.data.error);
+      setVerified((prev) => ({ ...prev, github: false }));
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("message", handleGithubMessage);
+    return () => window.removeEventListener("message", handleGithubMessage);
+  }, [handleGithubMessage]);
+
   // GSAP Entrance
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Header Elements
       gsap.fromTo(
         ".header-el",
         { y: -20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, ease: "power2.out" },
       );
-
-      // 2. Cards Stagger
       gsap.fromTo(
         ".platform-card",
         { y: 40, opacity: 0 },
@@ -102,7 +149,7 @@ export default function Step3_Connections() {
 
   // Handle Opening Modal
   const openConnectModal = (platform: (typeof PLATFORMS)[0]) => {
-    if (connected[platform.id]) return; // Already connected
+    if (connected[platform.id]) return;
     setSelectedPlatform(platform);
     setTempUrl(urls[platform.id] || "");
   };
@@ -114,19 +161,37 @@ export default function Step3_Connections() {
     setIsVerifying(false);
   };
 
+  // ─── Open GitHub OAuth popup ───
+  const openGithubVerifyPopup = () => {
+    window.open(
+      `${BACKEND_URL}/github/oauth`,
+      "githubVerify",
+      "width=600,height=700,scrollbars=yes",
+    );
+  };
+
   // Handle "Connect" Action inside Modal
   const handleConnect = () => {
     if (!tempUrl) return;
 
     setIsVerifying(true);
 
-    // Simulate Network Verification
-    setTimeout(() => {
-      setUrls((prev) => ({ ...prev, [selectedPlatform!.id]: tempUrl }));
-      setConnected((prev) => ({ ...prev, [selectedPlatform!.id]: true }));
+    if (selectedPlatform?.id === "github") {
+      // Save the URL first, then open OAuth popup for verification
+      setUrls((prev) => ({ ...prev, github: tempUrl }));
+      setConnected((prev) => ({ ...prev, github: false })); // Not verified yet
+      openGithubVerifyPopup();
       setIsVerifying(false);
       closeModal();
-    }, 1500);
+    } else {
+      // Other platforms: simulate verification (no OAuth)
+      setTimeout(() => {
+        setUrls((prev) => ({ ...prev, [selectedPlatform!.id]: tempUrl }));
+        setConnected((prev) => ({ ...prev, [selectedPlatform!.id]: true }));
+        setIsVerifying(false);
+        closeModal();
+      }, 1500);
+    }
   };
 
   // Save links to context and navigate
@@ -151,7 +216,6 @@ export default function Step3_Connections() {
     >
       {/* 1. HEADER SECTION */}
       <div className="w-full max-w-4xl mb-12">
-        {/* Top Bar with Step Count */}
         <div className="flex justify-between items-end mb-4 header-el">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-purple-500/10 rounded-lg text-purple-400">
@@ -167,7 +231,6 @@ export default function Step3_Connections() {
           </div>
         </div>
 
-        {/* Title & Progress */}
         <h2 className="header-el text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
           Connect Your Ecosystem
         </h2>
@@ -177,7 +240,6 @@ export default function Step3_Connections() {
           streams.
         </p>
 
-        {/* Progress Bar Container */}
         <div className="header-el h-1.5 w-full bg-white/5 rounded-full overflow-hidden relative">
           <motion.div
             className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 via-indigo-500 to-purple-500 background-animate"
@@ -192,6 +254,7 @@ export default function Step3_Connections() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl mb-16 px-4 md:px-0">
         {PLATFORMS.map((platform) => {
           const isConnected = connected[platform.id];
+          const isVerifiedPlatform = verified[platform.id];
 
           return (
             <motion.div
@@ -201,9 +264,7 @@ export default function Step3_Connections() {
               whileHover={{ y: -5 }}
               whileTap={{ scale: 0.98 }}
             >
-              {/* Inner Card Content */}
               <div className="relative h-full bg-[#0E0E14] rounded-[22px] p-6 flex flex-col items-center justify-between min-h-[280px] overflow-hidden">
-                {/* Active Border Gradient (Revealed on Connect) */}
                 <div
                   className={`absolute inset-0 border-2 rounded-[22px] transition-colors duration-500 pointer-events-none ${isConnected ? "border-emerald-500/50" : "border-transparent group-hover:border-white/10"}`}
                 />
@@ -215,7 +276,6 @@ export default function Step3_Connections() {
                   />
                 </div>
 
-                {/* Icon & Text */}
                 <div className="flex flex-col items-center text-center gap-4">
                   <div
                     className={`w-16 h-16 rounded-2xl flex items-center justify-center bg-white/5 border border-white/5 transition-colors duration-300 ${isConnected ? "bg-emerald-500/10 border-emerald-500/20" : ""}`}
@@ -245,8 +305,17 @@ export default function Step3_Connections() {
                 >
                   {isConnected ? (
                     <>
-                      <Check size={14} />
-                      <span>Linked</span>
+                      {platform.verifiable && isVerifiedPlatform ? (
+                        <>
+                          <ShieldCheck size={14} />
+                          <span>Verified</span>
+                        </>
+                      ) : (
+                        <>
+                          <Check size={14} />
+                          <span>Linked</span>
+                        </>
+                      )}
                     </>
                   ) : (
                     <>
@@ -284,11 +353,9 @@ export default function Step3_Connections() {
           }`}
           whileTap={isAnyConnected ? { scale: 0.98 } : {}}
         >
-          {/* Gradient Background */}
           {isAnyConnected && (
             <div className="absolute inset-0 bg-gradient-to-r from-[#7C3AED] to-[#6D28D9]" />
           )}
-
           <span className="relative z-10">Continue</span>
           <ArrowRight size={16} className="relative z-10" />
         </motion.button>
@@ -326,7 +393,6 @@ export default function Step3_Connections() {
               </button>
 
               <div className="flex flex-col items-center text-center mb-8">
-                {/* Platform Icon */}
                 <div
                   className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-4 ${selectedPlatform.bg} ${selectedPlatform.color} border border-white/5`}
                 >
@@ -337,12 +403,14 @@ export default function Step3_Connections() {
                   Connect {selectedPlatform.name}
                 </h3>
                 <p className="text-sm text-slate-400">
-                  Enter your public profile URL to sync your data.
+                  {selectedPlatform.verifiable
+                    ? "Enter your profile URL, then verify ownership via OAuth."
+                    : "Enter your public profile URL to sync your data."}
                 </p>
               </div>
 
               {/* Input Field */}
-              <div className="mb-8">
+              <div className="mb-6">
                 <label className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-wider mb-2 block text-left">
                   {selectedPlatform.name} URL
                 </label>
@@ -358,10 +426,24 @@ export default function Step3_Connections() {
                     autoFocus
                     className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-purple-500/50 transition-all shadow-inner"
                   />
-                  {/* Animated Bottom Line */}
                   <div className="absolute bottom-0 left-0 w-full h-[1px] bg-purple-500 scale-x-0 group-focus-within:scale-x-100 transition-transform duration-500 origin-center" />
                 </div>
               </div>
+
+              {/* GitHub verification info */}
+              {selectedPlatform.verifiable && (
+                <div className="mb-6 px-4 py-3 rounded-xl bg-purple-500/5 border border-purple-500/10 flex items-start gap-3">
+                  <ShieldCheck
+                    size={16}
+                    className="text-purple-400 flex-shrink-0 mt-0.5"
+                  />
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    After entering your URL, a popup will open to verify your
+                    GitHub ownership via OAuth. Your access token will be
+                    securely saved.
+                  </p>
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex gap-3">
@@ -380,6 +462,11 @@ export default function Step3_Connections() {
                     <>
                       <Loader2 size={16} className="animate-spin" />
                       Verifying...
+                    </>
+                  ) : selectedPlatform.verifiable ? (
+                    <>
+                      Verify with {selectedPlatform.name}
+                      <ExternalLink size={14} />
                     </>
                   ) : (
                     <>

@@ -11,13 +11,15 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
     },
     name: {
       type: String,
       required: true,
     },
     avatar: String,
+    githubId: { type: String, index: true, sparse: true },
+    githubUsername: String,
     role: {
       type: String,
       enum: ["Student", "Pass-out", "Others"],
@@ -26,24 +28,131 @@ const userSchema = new mongoose.Schema(
     institute: String,
     platforms: {
       github: {
+        id: String,
+        username: String,
         url: String,
         oauthConnected: { type: Boolean, default: false },
         accessToken: String,
         repos: Array,
+        connectedAt: Date,
       },
       notion: {
         oauthConnected: { type: Boolean, default: false },
         accessToken: String,
+        notionId: String,
+        workspaceId: String,
+        workspaceName: String,
+        workspaceIcon: String,
+        botId: String,
+        connectedAt: Date,
       },
       linkedin: String,
       behance: String,
       leetcode: String,
     },
     refreshToken: String,
-    resetPasswordOTP: String,
-    resetPasswordOTPExpires: Date,
     lastSync: {
       type: Date,
+    },
+    skills: {
+      nodes: [
+        {
+          id: String,
+          type: {
+            type: String,
+            enum: ["USER", "SKILL", "PROJECT", "DOMAIN"],
+          },
+          displayName: String,
+          description: String,
+          metrics: {
+            level: { type: Number, default: 0 },
+            confidenceScore: { type: Number, default: 0 },
+            githubCommits: { type: Number, default: 0 },
+            experienceYears: { type: Number, default: 0 },
+          },
+          visuals: {
+            category: String,
+            colorHex: String,
+            iconType: String,
+          },
+          interaction: {
+            route: String,
+            hasExpandableChildren: { type: Boolean, default: false },
+            childrenCursor: String,
+          },
+        },
+      ],
+      links: [
+        {
+          id: String,
+          source: String,
+          target: String,
+          relationshipType: {
+            type: String,
+            enum: ["MASTERY", "AUTHORSHIP", "USES", "BELONGS_TO"],
+          },
+          strengthValue: { type: Number, default: 0 },
+          confidenceScore: { type: Number, default: 0 },
+        },
+      ],
+      metadata: {
+        totalNodes: { type: Number, default: 0 },
+        totalLinks: { type: Number, default: 0 },
+        generationTimestamp: Date,
+        isPartialGraph: { type: Boolean, default: true },
+        nextPageCursor: String,
+      },
+      visualConfig: {
+        nodeSizeScaleFactor: { type: Number, default: 2.5 },
+        baseGlowIntensity: { type: Number, default: 1.5 },
+        highlightGlowIntensity: { type: Number, default: 3.0 },
+        linkThicknessScale: { type: Number, default: 1.2 },
+        particleSpeedScale: { type: Number, default: 0.005 },
+        dimmingOpacity: { type: Number, default: 0.15 },
+      },
+      interactionConfig: {
+        expandableTypes: {
+          type: [String],
+          default: ["USER", "DOMAIN", "PROJECT"],
+        },
+        focusDistanceMultiplier: { type: Number, default: 1.8 },
+        enableClickNavigation: { type: Boolean, default: true },
+        enableHoverIntelligence: { type: Boolean, default: true },
+      },
+      futurePotential: [
+        {
+          id: String,
+          type: {
+            type: String,
+            enum: ["SKILL", "PROJECT", "DOMAIN"],
+          },
+          displayName: String,
+          description: String,
+          reason: String,
+          relevanceScore: { type: Number, default: 0 },
+          difficulty: {
+            type: String,
+            enum: ["beginner", "intermediate", "advanced"],
+          },
+          basedOn: [String],
+          estimatedTimeWeeks: { type: Number, default: 0 },
+          resources: [
+            {
+              title: String,
+              url: String,
+              type: {
+                type: String,
+                enum: ["course", "article", "video", "repo", "docs"],
+              },
+            },
+          ],
+          visuals: {
+            category: String,
+            colorHex: String,
+            iconType: String,
+          },
+        },
+      ],
     },
   },
   { timestamps: true },
@@ -58,10 +167,20 @@ userSchema.pre("save", async function () {
 // Hash on findOneAndUpdate if password is changed
 userSchema.pre("findOneAndUpdate", async function () {
   const update = this.getUpdate();
-  if (update?.password) {
+
+  if (!update) return;
+
+  // check direct password update
+  if (update.password) {
     update.password = await bcrypt.hash(update.password, 10);
-    this.setUpdate(update);
   }
+
+  // check $set.password update
+  if (update.$set && update.$set.password) {
+    update.$set.password = await bcrypt.hash(update.$set.password, 10);
+  }
+
+  this.setUpdate(update);
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {

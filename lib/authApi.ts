@@ -67,7 +67,7 @@ export const resetPassword = async (email: string, otp: string, newPassword: str
 // ─── Agent Chat API Layer (SSE Streaming) ───────────────────────
 
 export async function* streamAgentChat(message: string, conversationId?: string) {
-    const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+    const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
 
     const response = await fetch(`${baseURL}/agent/chat`, {
         method: "POST",
