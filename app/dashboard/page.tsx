@@ -12,7 +12,7 @@ const Dashboard: React.FC = () => {
         <UserProvider>
             <div className="min-h-screen flex" style={{ background: "#0a0a10" }}>
                 {/* ── Navbar ─────────────────────────────────────────────────────── */}
-                <Navbar />
+                {/* <Navbar /> */}
                 
                 {/* ── Fixed Sidebar ─────────────────────────────────────────────── */}
                 <Sidebar />
@@ -28,8 +28,6 @@ const Dashboard: React.FC = () => {
                 <div className="relative z-10 px-4 md:px-8 md:ml-[185px] pt-24 md:pt-20 pb-7 flex flex-col gap-5 mx-auto ">
                     {/* Section 1 — Header + Stats */}
                     <HeroStats />
- main
-
                         {/* Section 2 — Graph Visualization */}
                         <GraphVisualization />
 
