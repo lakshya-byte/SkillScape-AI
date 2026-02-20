@@ -1,0 +1,23 @@
+
+> skillscape@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.7s
+  Running TypeScript ...
+Failed to compile.
+
+./components/chat/MessageInput.tsx:22:28
+Type error: Expected 1 arguments, but got 0.
+
+[0m [90m 20 |[39m   [36mconst[39m inputRef [33m=[39m useRef[33m<[39m[33mHTMLTextAreaElement[39m[33m>[39m([36mnull[39m)[33m;[39m
+ [90m 21 |[39m   [36mconst[39m typingRef [33m=[39m useRef([36mfalse[39m)[33m;[39m
+[31m[1m>[22m[39m[90m 22 |[39m   [36mconst[39m typingTimeoutRef [33m=[39m useRef[33m<[39m[33mReturnType[39m[33m<[39m[36mtypeof[39m setTimeout[33m>>[39m()[33m;[39m
+ [90m    |[39m                            [31m[1m^[22m[39m
+ [90m 23 |[39m
+ [90m 24 |[39m   useEffect(() [33m=>[39m {
+ [90m 25 |[39m     inputRef[33m.[39mcurrent[33m?[39m[33m.[39mfocus()[33m;[39m[0m
+Next.js build worker exited with code: 1 and signal: null
