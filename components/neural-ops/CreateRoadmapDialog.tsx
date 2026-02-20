@@ -52,7 +52,7 @@ export default function CreateRoadmapDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -60,7 +60,7 @@ export default function CreateRoadmapDialog({
       />
 
       {/* Dialog */}
-      <div className="relative w-full max-w-lg mx-4 rounded-2xl border border-white/10 bg-[#0f0a1a] shadow-2xl shadow-violet-500/5">
+      <div className="relative mx-4 rounded-2xl border border-white/10 bg-[#0f0a1a] shadow-2xl shadow-violet-500/5">
         {/* Header */}
         <div className="flex items-center justify-between px-6 pt-6 pb-2">
           <div className="flex items-center gap-3">

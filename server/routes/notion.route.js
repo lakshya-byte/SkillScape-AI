@@ -4,7 +4,7 @@ import { verifyJWT } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.get("/oauth",verifyJWT, getNotionAuth);
-router.get("/callback",verifyJWT, getNotionCallback);
+router.get("/oauth", getNotionAuth);
+router.get("/callback", getNotionCallback);
 
 export default router;

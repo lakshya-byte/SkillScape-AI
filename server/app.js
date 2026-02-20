@@ -15,6 +15,8 @@ import agentRouter from "./routes/agent.route.js";
 import roadmapRouter from "./routes/roadmap.route.js";
 import chatRouter from "./routes/chat.route.js";
 import leaderboardRouter from "./routes/leaderboard.route.js";
+import aiInsightRouter from "./routes/aiInsight.route.js";
+import techIntelRouter from "./routes/technicalIntelligence.route.js";
 
 const app = express();
 
@@ -44,6 +46,8 @@ app.use("/api/payments", paymentRouter);
 app.use("/api/roadmaps", roadmapRouter);
 app.use("/api/chats", chatRouter);
 app.use("/api/leaderboard", leaderboardRouter);
+app.use("/api/ai-insight", aiInsightRouter);
+app.use("/api/technical-intelligence", techIntelRouter);
 
 app.use(errorHandler);
 

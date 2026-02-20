@@ -158,6 +158,13 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    certificate: [
+      {
+        url: { type: String, required: true },
+        filename: { type: String },
+        uploadedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true },
 );
