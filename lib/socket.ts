@@ -17,7 +17,7 @@ export function getSocket(): Socket {
         .find((c) => c.startsWith("accessToken="))
         ?.split("=")[1];
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") || "http://localhost:8000";
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL?.replace("/api", "") || "https://skillscape-ai.onrender.com";
 
     socket = io(apiUrl, {
         auth: { token },
