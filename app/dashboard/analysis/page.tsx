@@ -9,8 +9,7 @@ import {
   Maximize2,
   Zap,
 } from "lucide-react";
-import { UserProvider, useUser } from "@/contexts/UserContext";
-import Sidebar from "@/components/Dasboard/Sidebar";
+import { useUser } from "@/contexts/UserContext";
 import Navbar from "@/components/landing/navbar/Navbar";
 import api from "@/lib/api";
 import { transformSkillsGraph, type GraphData } from "@/lib/graphTransformer";
@@ -29,7 +28,6 @@ const SkillIntelligenceGraph = dynamic(
   },
 );
 
-// ─── Inner Component ─────────────────────────────────────────────
 function AnalysisContent() {
   const { user, loading: userLoading } = useUser();
   const [graphData, setGraphData] = useState<GraphData | null>(null);
@@ -39,7 +37,6 @@ function AnalysisContent() {
   const [error, setError] = useState<string | null>(null);
   const [showGraph, setShowGraph] = useState(false);
 
-  // ── Load graph (uses cache) ────────────────────────────────────
   const loadGraph = useCallback(async () => {
     if (!user?._id) return;
 
@@ -47,7 +44,6 @@ function AnalysisContent() {
     setError(null);
 
     try {
-      // Check context first
       const contextSkills = (user as any)?.skills;
       if (contextSkills?.nodes && contextSkills.nodes.length > 0) {
         setGraphData(transformSkillsGraph(contextSkills));
@@ -55,7 +51,6 @@ function AnalysisContent() {
         return;
       }
 
-      // Fresh fetch
       const userRes = await api.get("/user/me");
       const userData = userRes.data?.data || userRes.data;
       const skills = userData?.skills;
@@ -66,7 +61,6 @@ function AnalysisContent() {
         return;
       }
 
-      // Generate via n8n
       setGenerating(true);
       const graphRes = await api.get(`/graph/generate/${user._id}`);
       const generated = graphRes.data?.data?.graph || graphRes.data?.graph;
@@ -89,7 +83,6 @@ function AnalysisContent() {
     }
   }, [user]);
 
-  // ── Rerun Intelligence (force regenerate) ──────────────────────
   const rerunGraph = useCallback(async () => {
     if (!user?._id) return;
 
@@ -123,7 +116,6 @@ function AnalysisContent() {
     }
   }, [userLoading, user?._id, loadGraph]);
 
-  // ── Fullscreen overlay within dashboard ────────────────────────
   if (showGraph && graphData) {
     return (
       <div className="fixed inset-0 z-[60]">
@@ -142,7 +134,6 @@ function AnalysisContent() {
 
   return (
     <div className="w-full max-w-5xl mx-auto">
-      {/* ── Header with action buttons (ALWAYS visible) ────────── */}
       <div className="flex items-center justify-between mb-8">
         <div>
           <div className="flex items-center gap-3 mb-1">
@@ -158,7 +149,6 @@ function AnalysisContent() {
           </p>
         </div>
 
-        {/* Action buttons — always visible when user is loaded */}
         {isReady && (
           <div className="flex items-center gap-2">
             <button
@@ -184,7 +174,6 @@ function AnalysisContent() {
         )}
       </div>
 
-      {/* ── Loading / Generating / Rerunning State ────────────── */}
       {(loading || userLoading || rerunning) && (
         <div className="flex flex-col items-center justify-center py-32 text-center">
           <div className="relative mb-6">
@@ -208,7 +197,6 @@ function AnalysisContent() {
         </div>
       )}
 
-      {/* ── Error State ───────────────────────────────────────── */}
       {error && !loading && !rerunning && (
         <div className="flex flex-col items-center justify-center py-32 text-center">
           <div className="p-6 rounded-full bg-red-500/10 border border-red-500/20 mb-6">
@@ -228,7 +216,6 @@ function AnalysisContent() {
         </div>
       )}
 
-      {/* ── Graph Loaded State ────────────────────────────────── */}
       {!loading && !rerunning && !error && graphData && (
         <div>
           <div
@@ -244,7 +231,6 @@ function AnalysisContent() {
               </div>
             </div>
 
-            {/* Stats Bar */}
             <div className="flex items-center justify-between px-6 py-4 border-t border-white/[0.06]">
               <div className="flex items-center gap-6">
                 <div>
@@ -277,7 +263,6 @@ function AnalysisContent() {
         </div>
       )}
 
-      {/* ── Empty State ───────────────────────────────────────── */}
       {!loading && !rerunning && !error && !graphData && (
         <div className="flex flex-col items-center justify-center py-32 text-center">
           <div className="p-6 rounded-full bg-violet-600/10 border border-violet-500/20 mb-6">
@@ -303,26 +288,22 @@ function AnalysisContent() {
   );
 }
 
-// ─── Page Wrapper ────────────────────────────────────────────────
 export default function AnalysisPage() {
   return (
-    <UserProvider>
-      <div className="min-h-screen flex" style={{ background: "#0a0a10" }}>
-        <Navbar />
-        <Sidebar />
-        <div className="flex-1 relative w-full">
-          <div
-            className="fixed top-0 left-0 md:left-[185px] right-0 h-[50vh] pointer-events-none z-0"
-            style={{
-              background:
-                "radial-gradient(ellipse at 30% 0%, rgba(124,58,237,0.08) 0%, transparent 60%)",
-            }}
-          />
-          <div className="relative z-10 px-4 md:px-8 md:ml-[210px] pt-24 md:pt-20 pb-7 flex flex-col gap-5 mx-auto pl-40">
-            <AnalysisContent />
-          </div>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex-1 relative w-full">
+        <div
+          className="fixed top-0 left-0 right-0 h-[50vh] pointer-events-none z-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 0%, rgba(124,58,237,0.08) 0%, transparent 60%)",
+          }}
+        />
+        <div className="relative z-10 px-4 md:px-8 pt-24 md:pt-20 pb-7 flex flex-col gap-5 mx-auto">
+          <AnalysisContent />
         </div>
       </div>
-    </UserProvider>
+    </div>
   );
 }

@@ -19,7 +19,13 @@ export default function MessageInput({
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const typingRef = useRef(false);
+<<<<<<< HEAD
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+=======
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
+>>>>>>> f3c8eb206962c163abcf78524f0f17ed544c267a
 
   useEffect(() => {
     inputRef.current?.focus();
