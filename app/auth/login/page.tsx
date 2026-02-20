@@ -231,7 +231,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() =>
                   window.open(
-                    `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"}/github/oauth`,
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL || "https://skillscape-ai.onrender.com"}/github/oauth`,
                     "githubVerify",
                     "width=600,height=700,scrollbars=yes",
                   )
@@ -245,7 +245,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() =>
                   window.open(
-                    `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"}/notion/oauth`,
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL || "https://skillscape-ai.onrender.com"}/notion/oauth`,
                     "notionVerify",
                     "width=600,height=700,scrollbars=yes",
                   )

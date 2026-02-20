@@ -69,7 +69,7 @@ function OAuthContent() {
   const handleGithubLogin = () => {
     const token = getToken();
     const url = new URL(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"}/github/oauth`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL || "https://skillscape-ai.onrender.com"}/github/oauth`,
     );
     if (token) url.searchParams.set("token", token);
     window.location.href = url.toString();

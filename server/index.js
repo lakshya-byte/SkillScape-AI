@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 8000;
     // Attach Socket.IO
     const io = new Server(httpServer, {
       cors: {
-        origin: ["http://localhost:5173", "http://localhost:3000"],
+        origin: "*",
         credentials: true,
       },
       pingTimeout: 60000,
