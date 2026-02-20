@@ -1,0 +1,52 @@
+
+> skillscape@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 9.0s
+  Running TypeScript ...
+  Collecting page data using 15 workers ...
+  Generating static pages using 15 workers (0/29) ...
+  Generating static pages using 15 workers (7/29) 
+  Generating static pages using 15 workers (14/29) 
+  Generating static pages using 15 workers (21/29) 
+✓ Generating static pages using 15 workers (29/29) in 689.1ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /auth/login
+├ ○ /auth/oauth
+├ ○ /auth/onboarding
+├ ○ /contact
+├ ○ /dashboard
+├ ○ /dashboard/ai-insight
+├ ○ /dashboard/analysis
+├ ○ /dashboard/friends
+├ ○ /dashboard/leaderboard
+├ ○ /dashboard/mission
+├ ○ /dashboard/neural-ops
+├ ○ /dashboard/technical-intelligence
+├ ○ /forgot-password
+├ ○ /graph
+├ ○ /onboarding
+├ ○ /onboarding/avatar
+├ ○ /onboarding/complete
+├ ○ /onboarding/connections
+├ ○ /onboarding/identity
+├ ○ /onboarding/loader
+├ ○ /onboarding/skills
+├ ○ /onboarding/welcome
+├ ○ /pricing
+├ ƒ /profile/[userId]
+└ ○ /reset-password
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
