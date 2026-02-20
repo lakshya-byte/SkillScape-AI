@@ -243,8 +243,14 @@ export default function LoginPage() {
               </button>
               <button
                 type="button"
-                onClick={() => alert("Notion OAuth is not implemented yet.")}
-                className="flex-1 py-2.5 rounded-full bg-[#1A1A23] border border-white/5 hover:bg-[#20202A] hover:border-white/10 transition-all flex items-center justify-center gap-2 text-slate-300 hover:text-white text-xs font-bold opacity-60 cursor-not-allowed"
+                onClick={() =>
+                  window.open(
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"}/notion/oauth`,
+                    "notionVerify",
+                    "width=600,height=700,scrollbars=yes",
+                  )
+                }
+                className="flex-1 py-2.5 rounded-full bg-[#1A1A23] border border-white/5 hover:bg-[#20202A] hover:border-white/10 transition-all flex items-center justify-center gap-2 text-slate-300 hover:text-white text-xs font-bold"
               >
                 <Layers size={16} />
                 <span>Continue with Notion</span>

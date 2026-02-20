@@ -119,3 +119,65 @@ export async function* streamAgentChat(message: string, conversationId?: string)
         }
     }
 }
+
+// ─── AI Resume Insight ──────────────────────────────────────────
+
+export const analyzeResume = async (file: File) => {
+    const formData = new FormData();
+    formData.append("resume", file);
+
+    const response = await api.post("/ai-insight", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+        timeout: 120000, // 2 min — AI analysis can take time
+    });
+    return response.data;
+};
+
+export const getResumeHistory = async () => {
+    const response = await api.get("/ai-insight/history");
+    return response.data;
+};
+
+// ─── Technical Intelligence ─────────────────────────────────────
+
+export const generateTechTest = async (data: {
+    topic: string;
+    difficulty: string;
+    totalQuestions: number;
+}) => {
+    const response = await api.post("/technical-intelligence/generate-test", data, {
+        timeout: 120000,
+    });
+    return response.data;
+};
+
+export const getUserTests = async () => {
+    const response = await api.get("/technical-intelligence/tests");
+    return response.data;
+};
+
+export const getTestById = async (testId: string) => {
+    const response = await api.get(`/technical-intelligence/tests/${testId}`);
+    return response.data;
+};
+
+export const submitTestAttempt = async (data: {
+    testId: string;
+    answers: { questionId: string; selectedAnswer: string }[];
+    startedAt: string;
+}) => {
+    const response = await api.post("/technical-intelligence/submit", data, {
+        timeout: 120000,
+    });
+    return response.data;
+};
+
+export const getUserAttempts = async () => {
+    const response = await api.get("/technical-intelligence/attempts");
+    return response.data;
+};
+
+export const getAttemptById = async (attemptId: string) => {
+    const response = await api.get(`/technical-intelligence/attempts/${attemptId}`);
+    return response.data;
+};

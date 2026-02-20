@@ -65,9 +65,9 @@ export default function NeuralOpsDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 mx-auto">
       {/* Header */}
-      <header className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <header className="flex flex-col w-5xl sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-violet-400 text-[10px] font-bold tracking-[0.3em] uppercase mb-2">
             <BrainCircuit className="w-3.5 h-3.5" />
