@@ -21,7 +21,7 @@ const NavLogo: React.FC<NavLogoProps> = ({ isScrolled }) => {
         `}
       >
         {/* 1. LOGO IMAGE
-           - Scales down when scrolled
+           - Scales down when scrolled  
            - Bloom effect on hover
         */}
         <div
