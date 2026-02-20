@@ -1,4 +1,4 @@
-import { User } from "../models/User.model.js";
+import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { generateState } from "arctic";
@@ -56,77 +56,74 @@ const getGithubAuth = async (req, res) => {
 //  • Return postMessage HTML to close popup
 // ─────────────────────────────────────────────────────────
 const getGithubCallback = async (req, res) => {
-    const github = new GitHub(
-        process.env.GITHUB_CLIENT_ID,
-        process.env.GITHUB_CLIENT_SECRET,
-        `http://localhost:8000/github/callback`
-    )
-    const { code, state } = req.query;
-    const storedState = req.cookies.github_oauth_state;
-    const handleFailedLogin = () => {
-        req.flash(
-            "errors",
-            "Couldn't authenticate with GitHub. Please try again."
-        )
-        return res.redirect("/auth/oauth");
-    }
-    if (!state || state !== storedState) {
-        return handleFailedLogin();
-    }
+  const github = new GitHub(
+    process.env.GITHUB_CLIENT_ID,
+    process.env.GITHUB_CLIENT_SECRET,
+    `http://localhost:8000/github/callback`,
+  );
+  const { code, state } = req.query;
+  const storedState = req.cookies.github_oauth_state;
+  const handleFailedLogin = () => {
+    req.flash("errors", "Couldn't authenticate with GitHub. Please try again.");
+    return res.redirect("/auth/oauth");
+  };
+  if (!state || state !== storedState) {
+    return handleFailedLogin();
+  }
 
-    let tokens;
-    try {
-        tokens = await github.validateAuthorizationCode(code);
-    } catch (error) {
-        return handleFailedLogin();
-    }
-    const githubUserResponse = await fetch("https://api.github.com/user",{
-        headers:{
-            Authorization: `Bearer ${tokens.accessToken()}`
-        }
-    })
-    if(!githubUserResponse.ok) return handleFailedLogin();
-    const githubUser = await githubUserResponse.json();
-    console.log(githubUser);
-    const response = await fetch("https://api.github.com/user/emails", {
-        headers: {
-            Authorization: `Bearer ${tokens.accessToken()}`,
-            Accept: "application/vnd.github+json"
-        }
-    });
-    const emails = await response.json();
-    const primary = emails.find(e => e.primary && e.verified);
+  let tokens;
+  try {
+    tokens = await github.validateAuthorizationCode(code);
+  } catch (error) {
+    return handleFailedLogin();
+  }
+  const githubUserResponse = await fetch("https://api.github.com/user", {
+    headers: {
+      Authorization: `Bearer ${tokens.accessToken()}`,
+    },
+  });
+  if (!githubUserResponse.ok) return handleFailedLogin();
+  const githubUser = await githubUserResponse.json();
+  console.log(githubUser);
+  const response = await fetch("https://api.github.com/user/emails", {
+    headers: {
+      Authorization: `Bearer ${tokens.accessToken()}`,
+      Accept: "application/vnd.github+json",
+    },
+  });
+  const emails = await response.json();
+  const primary = emails.find((e) => e.primary && e.verified);
 
-    if (!primary) {
-        console.log("No primary email found for GitHub user");
-        return handleFailedLogin();
-    }
-    
-    const primaryEmail = primary.email;
-    
-    // find user and update github token
-    const user = await User.findOneAndUpdate(
-        { email: primaryEmail },
-        {
-            $set: {
-                "platforms.github.url": `https://github.com/${githubUser.login}`,
-                "platforms.github.accessToken": tokens.accessToken(),
-                "platforms.github.oauthConnected": true,
-                "platforms.github.connectedAt": new Date()
-            }
-        },
-        { returnDocument: "after" }
-    );
-    
-    if (!user) {
-        console.log("No user found with email:", primaryEmail);
-        return handleFailedLogin();
-    }
-    
-    console.log("GitHub connected for:", user.email);
+  if (!primary) {
+    console.log("No primary email found for GitHub user");
+    return handleFailedLogin();
+  }
 
-    res.redirect(`${process.env.FRONTEND_URL}/auth/oauth?github=success`);
-}
+  const primaryEmail = primary.email;
+
+  // find user and update github token
+  const user = await User.findOneAndUpdate(
+    { email: primaryEmail },
+    {
+      $set: {
+        "platforms.github.url": `https://github.com/${githubUser.login}`,
+        "platforms.github.accessToken": tokens.accessToken(),
+        "platforms.github.oauthConnected": true,
+        "platforms.github.connectedAt": new Date(),
+      },
+    },
+    { returnDocument: "after" },
+  );
+
+  if (!user) {
+    console.log("No user found with email:", primaryEmail);
+    return handleFailedLogin();
+  }
+
+  console.log("GitHub connected for:", user.email);
+
+  res.redirect(`${process.env.FRONTEND_URL}/auth/oauth?github=success`);
+};
 
 // ─────────────────────────────────────────────────────────
 //  GET /github/disconnect  →  Clear GitHub data
