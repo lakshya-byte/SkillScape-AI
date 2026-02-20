@@ -50,6 +50,13 @@ export default function PricingCard({ tier, billingCycle, index }: PricingCardPr
 
   const handlePayment = async () => {
     try {
+      // Debug: Check if environment variables are loaded
+      console.log('Environment check:', {
+        razorpayKey: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        apiUrl: process.env.NEXT_PUBLIC_API_URL,
+        envKeys: Object.keys(process.env).filter(key => key.includes('RAZORPAY'))
+      });
+
       const res = await loadRazorpay();
 
       if (!res) {
@@ -80,11 +87,21 @@ export default function PricingCard({ tier, billingCycle, index }: PricingCardPr
       const { data: order } = orderData;
 
       // 2. Open Razorpay Modal
+      const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      
+      if (!razorpayKey) {
+        console.error('Razorpay key is missing from environment variables');
+        alert('Payment configuration error: Razorpay key is missing. Please check your environment configuration.');
+        return;
+      }
+
+      console.log('Initializing Razorpay with key:', razorpayKey.substring(0, 10) + '...');
+
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: razorpayKey,
         amount: order.amount,
         currency: order.currency,
-        name: 'SkillScape AI',
+        name: 'Velion AI',
         description: `Subscription for ${tier.name} plan`,
         image: '/logo.png', // Add your logo path here
         order_id: order.id,
@@ -119,7 +136,7 @@ export default function PricingCard({ tier, billingCycle, index }: PricingCardPr
           contact: '',
         },
         notes: {
-          address: 'SkillScape AI Corporate Office',
+          address: 'Velion AI Corporate Office',
         },
         theme: {
           color: '#8b5cf6', // purple-500
@@ -127,6 +144,13 @@ export default function PricingCard({ tier, billingCycle, index }: PricingCardPr
       };
 
       const paymentObject = new (window as any).Razorpay(options);
+      
+      // Add event listeners for better error handling
+      paymentObject.on('payment.failed', function (response: any) {
+        console.error('Payment failed:', response.error);
+        alert(`Payment Failed: ${response.error.description || 'Unknown error occurred'}`);
+      });
+
       paymentObject.open();
 
     } catch (error) {

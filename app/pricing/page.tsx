@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import PricingSection from '@/components/pricing/PricingSection';
 
 export const metadata: Metadata = {
-  title: 'Pricing • SkillScape AI',
+  title: 'Pricing • Velion AI',
   description: 'Choose the computational power required to architect the future. Upgrade your neural capacity today.',
 };
 

@@ -22,7 +22,7 @@ export default function Hero() {
       >
         <span className="w-1.5 h-1.5 rounded-full bg-[#8b5cf6]" />
         <span className="text-[#a78bfa] text-[11px] font-semibold tracking-widest uppercase">
-          Contact SkillScape
+          Contact Velion AI
         </span>
       </div>
 
@@ -39,7 +39,7 @@ export default function Hero() {
         <span className="bg-gradient-to-r from-[#8b5cf6] to-[#c084fc] bg-clip-text text-transparent">
           Intelligence
         </span>{" "}
-        Behind SkillScape
+        Behind Velion AI
       </h1>
 
       {/* Subtext */}

@@ -55,7 +55,7 @@ export default function FinalCall() {
           </h2>
 
           <p className="text-[#6b7280] text-sm mb-8 max-w-sm mx-auto leading-relaxed">
-            Join 10,000+ engineers mapping their career growth with SkillScape.
+            Join 10,000+ engineers mapping their career growth with Velion AI.
           </p>
 
           <button
@@ -91,7 +91,7 @@ export default function FinalCall() {
                   <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <span className="text-white font-bold text-sm font-[Sora,sans-serif]">SkillScape AI</span>
+              <span className="text-white font-bold text-sm font-[Sora,sans-serif]">Velion AI</span>
             </div>
 
             {/* Footer nav */}
@@ -135,7 +135,7 @@ export default function FinalCall() {
 
           {/* Bottom copyright */}
           <div className="border-t border-[rgba(255,255,255,0.05)] pt-5 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <p className="text-[#374151] text-xs">© 2024 SkillScape AI. All rights reserved.</p>
+            <p className="text-[#374151] text-xs">© 2024 Velion AI. All rights reserved.</p>
             <p className="text-[#374151] text-xs">Built with intelligence, designed for humans.</p>
           </div>
         </div>
