@@ -245,7 +245,7 @@ const Leaderboard = () => {
       {/* --- SYSTEM FOOTER --- */}
       <footer className="flex justify-between items-center text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em] pb-8">
         <div className="flex items-center gap-2 italic">
-          <div className="w-2 h-2 bg-purple-500/50 rounded-full" /> SkillScape AI &copy; 2024
+          <div className="w-2 h-2 bg-purple-500/50 rounded-full" /> Velion AI &copy; 2024
         </div>
         <div className="flex gap-6">
           <a href="#" className="hover:text-gray-400">Privacy Policy</a>

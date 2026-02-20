@@ -80,7 +80,7 @@ export default function PillarsSection() {
       text-white/40
     "
   >
-    SkillScape Features
+    Velion AI Features
   </span>
 </SectionReveal>
 

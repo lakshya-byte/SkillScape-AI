@@ -18,7 +18,7 @@ const NetworkExpansion: React.FC = () => {
         <p className="text-[12px] font-mono text-gray-500 leading-relaxed mb-6">
           Invite collaborators to map out organizational knowledge silos and optimize team
           <br />
-          distribution with SkillScape AI Enterprise.
+          distribution with Velion AI Enterprise.
         </p>
 
         <div className="flex gap-3 justify-center">

@@ -11,7 +11,7 @@ const contacts = [
     ),
     title: "General Inquiries",
     desc: "Questions about our product or team? We'd love to hear from you.",
-    email: "hello@skillscape.ai",
+    email: "hello@Velion AI.ai",
   },
   {
     icon: (
@@ -23,7 +23,7 @@ const contacts = [
     ),
     title: "Partnerships",
     desc: "Interested in co-launching the future of skills education.",
-    email: "partner@skillscape.ai",
+    email: "partner@Velion AI.ai",
   },
   {
     icon: (
@@ -35,7 +35,7 @@ const contacts = [
     ),
     title: "Technical Support",
     desc: "Encountering a bug or need help with a visualization?",
-    email: "help@skillscape.ai",
+    email: "help@Velion AI.ai",
   },
 ];
 

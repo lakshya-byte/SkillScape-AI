@@ -231,7 +231,7 @@ export default function ProfilePage({
         {/* Footer */}
         <div className="ui-shell opacity-0 mt-20 text-center border-t border-white/5 pt-8">
           <p className="text-xs text-slate-600 font-mono uppercase tracking-widest">
-            SkillScape AI Intelligence Systems © 2024 • Neural Net v2.4.0
+            Velion AI Intelligence Systems © 2024 • Neural Net v2.4.0
           </p>
         </div>
       </div>
