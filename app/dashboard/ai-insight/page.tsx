@@ -1,4 +1,4 @@
-import React from 'react'
+"use client";
 
 import React, { useState, useEffect, useCallback } from "react";
 import { Cpu, History, ChevronDown, FileText, Clock } from "lucide-react";

@@ -3,7 +3,7 @@
 import React, { useState, useCallback } from "react";
 import { BrainCircuit } from "lucide-react";
 import Navbar from "@/components/landing/navbar/Navbar";
-import TestGenerator from "@/components/technical-intelligence/TestGenerator";
+import TestGenerator from "@/components/technical-intelligence/TestGenerator"; 
 import TestAttempt from "@/components/technical-intelligence/TestAttempt";
 import TestReview from "@/components/technical-intelligence/TestReview";
 import TestHistory from "@/components/technical-intelligence/TestHistory";
