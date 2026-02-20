@@ -196,7 +196,7 @@ const SkillScapeDashboard = () => {
           <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-purple-600/10 blur-[100px] rounded-full pointer-events-none" />
           <h2 className="text-2xl font-bold text-white mb-3">Expand Your Intelligence Network</h2>
           <p className="text-sm text-gray-500 max-w-lg mx-auto mb-8">
-            Invite collaborators to map out organizational knowledge silos and optimize team distribution with SkillScape AI Enterprise.
+            Invite collaborators to map out organizational knowledge silos and optimize team distribution with Velion AI Enterprise.
           </p>
           <div className="flex justify-center gap-4">
             <button className="px-8 py-3 bg-white text-black text-xs font-bold rounded-xl hover:bg-gray-200 transition">Upgrade to Enterprise</button>
@@ -207,7 +207,7 @@ const SkillScapeDashboard = () => {
         {/* --- SYSTEM FOOTER --- */}
         <footer className="flex justify-between items-center text-[10px] text-gray-600 font-bold uppercase tracking-[0.2em] pb-8">
           <div className="flex items-center gap-2 italic">
-            <div className="w-2 h-2 bg-purple-500/50 rounded-full" /> SkillScape AI 2024
+            <div className="w-2 h-2 bg-purple-500/50 rounded-full" /> Velion AI 2024
           </div>
           <div className="flex gap-6">
             <a href="#" className="hover:text-gray-400">Privacy Policy</a>

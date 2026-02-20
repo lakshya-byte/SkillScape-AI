@@ -147,10 +147,10 @@ export default function Problem() {
         {/* ───────── WHY SKILLSCAPE ───────── */}
         <div className="text-center mb-16 pt-10">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Why SkillScape Matters
+            Why Velion AI Matters
           </h2>
           <p className="text-gray-400 max-w-xl mx-auto text-sm md:text-base">
-            We're moving beyond resume keywords. SkillScape builds a multidimensional understanding of technical talent.
+            We're moving beyond resume keywords. Velion AI builds a multidimensional understanding of technical talent.
           </p>
         </div>
 

@@ -52,7 +52,7 @@ const SkillScapeDashboard = () => {
                       </div>
                       <div>
                         <h2 className="font-semibold text-white">Intelligence Feed</h2>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider">Powered by SkillScape Engine v2.0</p>
+                        <p className="text-[10px] text-gray-500 uppercase tracking-wider">Powered by Velion AI Engine v2.0</p>
                       </div>
                     </div>
                     <span className="flex items-center gap-2 text-[10px] bg-green-500/10 text-green-500 px-2 py-1 rounded-full border border-green-500/20 font-bold">

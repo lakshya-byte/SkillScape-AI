@@ -265,7 +265,7 @@ const MissionCenter = () => {
             <section className="mt-16 bg-gradient-to-r from-blue-900/20 via-purple-900/20 to-blue-900/20 border border-purple-500/10 rounded-[40px] p-8 md:p-16 text-center">
               <h2 className="text-3xl font-bold text-white mb-4">Expand Your Intelligence Network</h2>
               <p className="text-gray-400 text-sm max-w-xl mx-auto mb-10 leading-relaxed">
-                Invite collaborators to map out organizational knowledge silos and optimize team distribution with SkillScape AI Enterprise.
+                Invite collaborators to map out organizational knowledge silos and optimize team distribution with Velion AI Enterprise.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <button className="px-10 py-3.5 bg-white text-black font-bold rounded-xl text-xs hover:bg-gray-200 transition">
@@ -278,7 +278,7 @@ const MissionCenter = () => {
             </section>
 
             <footer className="mt-20 text-center text-[10px] text-gray-600 tracking-[0.4em] uppercase font-black">
-              &copy; 2026 SkillScape AI Intelligence Systems. All neural pathways protected.
+              &copy; 2026 Velion AI Intelligence Systems. All neural pathways protected.
             </footer>
           </div>
         </main>

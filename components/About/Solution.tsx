@@ -7,7 +7,7 @@ const steps = [
   {
     step: "01",
     title: "Connect Your Sources",
-    desc: "Link your GitHub, LinkedIn, certifications, and project repos. SkillScape pulls everything into one unified pipeline.",
+    desc: "Link your GitHub, LinkedIn, certifications, and project repos. Velion AI pulls everything into one unified pipeline.",
     tag: "Ingestion",
     icon: Link,
   },
@@ -71,7 +71,7 @@ export default function Solution() {
           </span>
 
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            How SkillScape Works
+            How Velion AI Works
           </h2>
 
           <p className="text-gray-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">

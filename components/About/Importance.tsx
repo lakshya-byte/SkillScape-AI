@@ -263,7 +263,7 @@ export default function Importance() {
                 }`}
             >
               <span className="uppercase text-xs tracking-widest text-purple-400 font-semibold">
-                The Future · SkillScape AI
+                The Future · Velion AI
               </span>
 
               <div className="mt-6 space-y-6">

@@ -22,7 +22,7 @@ const AssistantDashboard = () => {
         {/* <Sidebar /> */}
         <div className="p-8">
            <div className="flex items-center gap-2 text-purple-500 font-black tracking-tighter text-xl mb-10">
-              <Zap size={24} fill="currentColor" /> SKILLSCAPE
+              <Zap size={24} fill="currentColor" /> Velion AI
            </div>
            {/* <nav className="space-y-6 text-[10px] font-black uppercase tracking-widest text-gray-500">
               <div className="text-purple-400">01. Mission Control</div>
@@ -188,7 +188,7 @@ const AssistantDashboard = () => {
           </div>
 
           <footer className="mt-10 text-center text-[10px] text-gray-700 tracking-[0.4em] font-black uppercase">
-            © 2026 SkillScape AI. Neural pathways active.
+            © 2026 Velion AI. Neural pathways active.
           </footer>
         </div>
       </div>

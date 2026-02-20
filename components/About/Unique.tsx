@@ -6,7 +6,7 @@ import { Sparkles, Zap } from "lucide-react";
 const differentiators = [
   {
     left: "Traditional Hiring",
-    right: "SkillScape",
+    right: "Velion AI",
     topic: "Skill Discovery",
     leftDesc: "Keyword matching on PDFs",
     rightDesc: "Graph-based capability analysis",
@@ -68,7 +68,7 @@ export default function Unique() {
           </span>
 
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            The SkillScape Advantage
+            The Velion AI Advantage
           </h2>
 
           <p className="text-gray-400 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
@@ -83,7 +83,7 @@ export default function Unique() {
           </div>
           <div />
           <div className="text-purple-400 text-xs font-semibold tracking-wider uppercase text-right">
-            SkillScape
+            Velion AI
           </div>
         </div>
 
