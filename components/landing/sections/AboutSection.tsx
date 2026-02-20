@@ -37,7 +37,7 @@ const AboutSection = () => {
             mb-6
           "
           >
-            What is SkillScape AI
+            What is Velion AI
           </span>
 
           {/* Main Heading */}
@@ -76,7 +76,7 @@ const AboutSection = () => {
             leading-relaxed
           "
           >
-            SkillScape AI transforms your GitHub, projects, and learning data
+            Velion AI transforms your GitHub, projects, and learning data
             into a living intelligence graph. Explore your skills, understand
             relationships between technologies, and gain deep insights into your
             technical evolution.

@@ -16,7 +16,7 @@ const timelineData = [
     date: "Step 01 — Connect Your Data",
     events: [
       "Securely connect your GitHub, projects, and learning platforms",
-      "SkillScape AI analyzes repositories, commits, and technologies",
+      "Velion AI analyzes repositories, commits, and technologies",
       "Automatically extracts skills, tools, and knowledge signals",
     ],
   },
@@ -106,7 +106,7 @@ export default function RecruitmentTimelineSection() {
         text-white/40
       "
     >
-      SkillScape Intelligence Flow
+      Velion AI Intelligence Flow
     </span>
 
     <h2

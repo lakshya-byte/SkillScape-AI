@@ -116,7 +116,7 @@ export default function HeroContent() {
           leading-relaxed
         "
       >
-        SkillScape AI transforms your GitHub and projects into a living,
+        Velion AI transforms your GitHub and projects into a living,
         interactive knowledge graph. Discover your strengths, identify skill
         gaps, and explore your technical intelligence in immersive 3D.
       </p>
