@@ -19,7 +19,7 @@ export default function MessageInput({
   const [message, setMessage] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const typingRef = useRef(false);
-  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -50,15 +50,17 @@ export default function MessageInput({
       onTyping?.();
     }
 
-    clearTimeout(typingTimeoutRef.current);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
     typingTimeoutRef.current = setTimeout(() => {
       typingRef.current = false;
       onStopTyping?.();
-    }, 2000);
+    }, 2000) as any;
   };
 
   return (
-    <div className="p-4 border-t border-white/[0.06] bg-[#0a0a14]/80 backdrop-blur-md">
+    <div className="p-4 border-t border-white/6 bg-[#0a0a14]/80 backdrop-blur-md">
       <div className="flex items-end gap-3">
         <textarea
           ref={inputRef}

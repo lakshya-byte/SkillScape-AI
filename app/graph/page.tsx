@@ -61,8 +61,7 @@ interface GraphData {
   links: IntelligenceLink[];
 }
 
-// --- Static Intelligence Data ---
-const staticGraphData: GraphData = {
+const graphData: GraphData = {
   nodes: [
     {
       id: "user_lakshya",
@@ -183,26 +182,32 @@ const staticGraphData: GraphData = {
     },
   ],
   links: [
-    { source: "user_lakshya", target: "skill_react", value: 8 },
-    { source: "user_lakshya", target: "skill_nextjs", value: 9 },
-    { source: "user_lakshya", target: "skill_nodejs", value: 6 },
-    { source: "user_lakshya", target: "skill_ai", value: 7 },
-    { source: "user_lakshya", target: "plat_github", value: 10 },
-    { source: "user_lakshya", target: "plat_leetcode", value: 5 },
-    { source: "user_lakshya", target: "proj_velionai", value: 10 },
-    { source: "skill_react", target: "skill_nextjs", value: 8 },
-    { source: "skill_nodejs", target: "skill_mongodb", value: 7 },
-    { source: "skill_nextjs", target: "proj_velionai", value: 9 },
-    { source: "skill_ai", target: "proj_velionai", value: 8 },
-    { source: "plat_github", target: "proj_velionai", value: 6 },
-  ],
+    { source: 'user_lakshya', target: 'skill_react' },
+    { source: 'user_lakshya', target: 'skill_nextjs' },
+    { source: 'user_lakshya', target: 'skill_nodejs' },
+    { source: 'user_lakshya', target: 'skill_mongodb' },
+    { source: 'user_lakshya', target: 'skill_ai' },
+    { source: 'user_lakshya', target: 'plat_github' },
+    { source: 'user_lakshya', target: 'plat_leetcode' },
+    { source: 'skill_react', target: 'proj_velionai' },
+    { source: 'skill_nextjs', target: 'proj_velionai' },
+    { source: 'skill_nodejs', target: 'proj_velionai' },
+    { source: 'skill_mongodb', target: 'proj_velionai' },
+    { source: 'skill_ai', target: 'proj_velionai' },
+  ] as IntelligenceLink[]
 };
 
 // --- Shared 3D Resources (GPU Optimization) ---
 // We instantiate geometries once to avoid memory leaks during dynamic rendering
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 
-export default function StudentSkillIntelligenceGraph() {
+const statusColors = {
+  ACTIVE: '#10B981',    // Emerald Green
+  COMPLETED: '#3B82F6', // Blue
+  ARCHIVED: '#6B7280'   // Gray
+};
+
+export default function ProjectDataIntelligenceGraph() {
   const router = useRouter();
   const fgRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -226,7 +231,7 @@ export default function StudentSkillIntelligenceGraph() {
     const neighbors = new Map<string, Set<string>>();
     const links = new Map<string, string>();
 
-    staticGraphData.links.forEach((link) => {
+    graphData.links.forEach((link) => {
       const sourceId =
         typeof link.source === "object" ? link.source.id : link.source;
       const targetId =
@@ -350,7 +355,7 @@ export default function StudentSkillIntelligenceGraph() {
             ref={fgRef}
             width={dimensions.width}
             height={dimensions.height}
-            graphData={staticGraphData}
+            graphData={graphData}
             backgroundColor="#020202"
             // Interaction configuration
             onNodeHover={handleNodeHover as any}

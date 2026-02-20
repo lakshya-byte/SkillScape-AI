@@ -7,7 +7,7 @@ import { Cpu, Terminal, Layers, Globe, Code2 } from "lucide-react";
 interface Skill {
   name: string;
   level: number;
-  icon: any;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   color: string;
   meta: string;
 }
@@ -105,7 +105,7 @@ export default function SkillsCard() {
                 className={`absolute h-full left-0 top-0 rounded-full ${skill.color} shadow-[0_0_10px_rgba(255,255,255,0.2)]`}
               >
                 {/* Shimmer Effect */}
-                <div className="absolute top-0 right-0 bottom-0 w-[100px] bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] animate-shimmer" />
+                <div className="absolute top-0 right-0 bottom-0 w-[100px] bg-linear-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] animate-shimmer" />
               </motion.div>
             </div>
 
