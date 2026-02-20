@@ -5,6 +5,7 @@ import {
   getRoadmaps,
   getRoadmap,
   streamRoadmap,
+  toggleNodeCompletion,
 } from "../controllers/roadmap.controller.js";
 
 const router = Router();
@@ -15,6 +16,7 @@ router.use(verifyJWT);
 router.post("/create", createRoadmap);
 router.get("/", getRoadmaps);
 router.get("/stream/:id", streamRoadmap);
+router.patch("/:id/nodes/:nodeId/toggle", toggleNodeCompletion);
 router.get("/:id", getRoadmap);
 
 export default router;

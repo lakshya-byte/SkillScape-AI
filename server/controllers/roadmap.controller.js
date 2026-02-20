@@ -261,3 +261,61 @@ export const streamRoadmap = async (req, res) => {
     res.end();
   }
 };
+
+// ─── 5. Toggle Node Completion ──────────────────────────────────
+export const toggleNodeCompletion = async (req, res) => {
+  try {
+    const { id: roadmapId, nodeId } = req.params;
+
+    const roadmap = await Roadmap.findOne({
+      _id: roadmapId,
+      userId: req.user._id,
+    });
+
+    if (!roadmap) {
+      return res.status(404).json(new ApiError(404, "Roadmap not found"));
+    }
+
+    // Validate that the nodeId actually exists in the graph
+    const nodeExists = roadmap.graph.nodes.some((n) => n.id === nodeId);
+    if (!nodeExists) {
+      return res
+        .status(404)
+        .json(new ApiError(404, "Node not found in roadmap"));
+    }
+
+    // Toggle: if already completed → remove, else → add
+    const isCompleted = roadmap.completedNodeIds.includes(nodeId);
+
+    if (isCompleted) {
+      roadmap.completedNodeIds = roadmap.completedNodeIds.filter(
+        (id) => id !== nodeId,
+      );
+    } else {
+      roadmap.completedNodeIds.push(nodeId);
+    }
+
+    await roadmap.save();
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          nodeId,
+          completed: !isCompleted,
+          completedNodeIds: roadmap.completedNodeIds,
+          progress: {
+            completed: roadmap.completedNodeIds.length,
+            total: roadmap.graph.nodes.length,
+          },
+        },
+        `Node ${!isCompleted ? "completed" : "uncompleted"}`,
+      ),
+    );
+  } catch (error) {
+    console.error("Toggle node completion error:", error);
+    return res
+      .status(500)
+      .json(new ApiError(500, "Failed to toggle node completion"));
+  }
+};

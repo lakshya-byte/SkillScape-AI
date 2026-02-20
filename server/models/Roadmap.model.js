@@ -42,6 +42,10 @@ const roadmapSchema = new mongoose.Schema(
       enum: ["generating", "completed"],
       default: "generating",
     },
+    completedNodeIds: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true },
 );
