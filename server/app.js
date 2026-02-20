@@ -23,7 +23,7 @@ const app = express();
 app.set("trust proxy", 1);
 app.use(
   cors({
-    origin: "*",
+    origin: ["http://localhost:5173", "http://localhost:3000", "https://velion-ai-delta.vercel.app"],
     credentials: true,
   }),
 );
