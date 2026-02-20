@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { User } from "./models/User.model.js";
+import { User } from "./models/user.model.js";
 import { Chat } from "./models/Chat.model.js";
 import { Message } from "./models/Message.model.js";
 
