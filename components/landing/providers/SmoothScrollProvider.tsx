@@ -25,17 +25,11 @@ export default function SmoothScrollProvider({
     const lenis = new Lenis({
       duration: 1.1,
 
-      easing: (t: number) =>
-        1 - Math.pow(1 - t, 3),
+      easing: (t: number) => 1 - Math.pow(1 - t, 3),
 
       smoothWheel: true,
 
-      smoothTouch: false,
-
       wheelMultiplier: 0.9,
-
-      touchMultiplier: 1.5,
-
       infinite: false,
     });
 
@@ -82,10 +76,7 @@ export default function SmoothScrollProvider({
       }
     };
 
-    document.addEventListener(
-      "visibilitychange",
-      visibilityHandler
-    );
+    document.addEventListener("visibilitychange", visibilityHandler);
 
     /*
     ========================================
@@ -98,8 +89,7 @@ export default function SmoothScrollProvider({
 
       ignoreMobileResize: true,
 
-      autoRefreshEvents:
-        "visibilitychange,DOMContentLoaded,load",
+      autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
     });
 
     /*
@@ -119,10 +109,7 @@ export default function SmoothScrollProvider({
     return () => {
       gsap.ticker.remove(update);
 
-      document.removeEventListener(
-        "visibilitychange",
-        visibilityHandler
-      );
+      document.removeEventListener("visibilitychange", visibilityHandler);
 
       lenis.destroy();
 

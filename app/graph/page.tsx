@@ -1,210 +1,466 @@
-'use client';
+"use client";
 
-import React, { useState, useRef, useMemo, useCallback, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import * as THREE from 'three';
-import SpriteText from 'three-spritetext';
-import { motion, AnimatePresence } from 'framer-motion';
-import { GitCommit, Star, Activity, Clock, Server, ExternalLink } from 'lucide-react';
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useCallback,
+  useEffect,
+} from "react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import * as THREE from "three";
+import SpriteText from "three-spritetext";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  BrainCircuit,
+  GitCommit,
+  Clock,
+  Target,
+  ExternalLink,
+} from "lucide-react";
 
-const ForceGraph3D = dynamic(() => import('react-force-graph-3d'), { 
+// Dynamically import ForceGraph3D to bypass Next.js SSR restrictions
+const ForceGraph3D = dynamic(() => import("react-force-graph-3d"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-screen w-full items-center justify-center bg-[#050505]">
-      <div className="flex items-center space-x-3 text-sm text-gray-500">
-        <Server className="h-4 w-4 animate-pulse" />
-        <span>Loading Graph Engine...</span>
-      </div>
+    <div className="flex h-full w-full items-center justify-center bg-[#050505]">
+      <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-cyan-500" />
     </div>
-  )
+  ),
 });
 
-type ProjectStatus = 'ACTIVE' | 'COMPLETED' | 'ARCHIVED';
+// --- Types & Interfaces ---
+type NodeType = "USER" | "SKILL" | "DOMAIN" | "PLATFORM" | "PROJECT";
 
-interface ProjectNode {
+interface IntelligenceNode {
   id: string;
   name: string;
+  type: NodeType;
   description: string;
-  githubUrl: string;
-  stars: number;
-  commitCount: number;
-  lastUpdated: string;
-  status: ProjectStatus;
-  complexityScore: number;
-  category: string;
-  x?: number; y?: number; z?: number;
+  level: number; // 1-100
+  commits: number;
+  experience: number; // Years
+  confidence: number; // 0-1
+  route: string;
+  color: string;
+  val: number; // Visual size mapping
+  x?: number;
+  y?: number;
+  z?: number;
 }
 
-const graphData = {
+interface IntelligenceLink {
+  source: string | IntelligenceNode;
+  target: string | IntelligenceNode;
+  value: number; // Strength of relationship
+}
+
+interface GraphData {
+  nodes: IntelligenceNode[];
+  links: IntelligenceLink[];
+}
+
+// --- Static Intelligence Data ---
+const staticGraphData: GraphData = {
   nodes: [
-    { id: 'prj_velionai', name: 'VelionAI', description: 'Enterprise SaaS Intelligence Platform.', githubUrl: 'https://github.com/lakshya/velionai', stars: 45, commitCount: 1250, lastUpdated: '2026-02-18', status: 'ACTIVE', complexityScore: 95, category: 'AI/SaaS' },
-    { id: 'prj_krishinetra', name: 'KrishiNetra', description: 'Android mobile application utilizing MVVM.', githubUrl: 'https://github.com/lakshya/krishinetra', stars: 82, commitCount: 840, lastUpdated: '2025-12-05', status: 'COMPLETED', complexityScore: 88, category: 'Mobile App' },
-    { id: 'prj_ncs', name: 'NCS Website', description: 'Official web platform for the Nibble Computer Society.', githubUrl: 'https://github.com/lakshya/ncs-website', stars: 120, commitCount: 620, lastUpdated: '2026-02-14', status: 'ACTIVE', complexityScore: 75, category: 'Web Platform' },
-    { id: 'prj_formify', name: 'Formify', description: 'Dynamic form generation engine.', githubUrl: 'https://github.com/lakshya/formify', stars: 34, commitCount: 410, lastUpdated: '2026-01-10', status: 'ACTIVE', complexityScore: 82, category: 'Tooling' },
-    { id: 'prj_summarease', name: 'SummarEase', description: 'Automated NLP-based text summarization.', githubUrl: 'https://github.com/lakshya/summarease', stars: 15, commitCount: 180, lastUpdated: '2025-11-30', status: 'ARCHIVED', complexityScore: 65, category: 'Data Science' }
-  ] as ProjectNode[],
+    {
+      id: "user_lakshya",
+      name: "Lakshya",
+      type: "USER",
+      description: "System Architect & Primary Entity",
+      level: 100,
+      commits: 3420,
+      experience: 5,
+      confidence: 0.98,
+      route: "/profile/lakshya",
+      color: "#00F0FF",
+      val: 30,
+    },
+    {
+      id: "skill_react",
+      name: "React",
+      type: "SKILL",
+      description: "Frontend Component Architecture",
+      level: 95,
+      commits: 1205,
+      experience: 4,
+      confidence: 0.95,
+      route: "/skills/react",
+      color: "#61DAFB",
+      val: 20,
+    },
+    {
+      id: "skill_nextjs",
+      name: "Next.js",
+      type: "SKILL",
+      description: "React Framework & SSR",
+      level: 92,
+      commits: 840,
+      experience: 3,
+      confidence: 0.92,
+      route: "/skills/nextjs",
+      color: "#FFFFFF",
+      val: 18,
+    },
+    {
+      id: "skill_nodejs",
+      name: "Node.js",
+      type: "SKILL",
+      description: "Backend Runtime",
+      level: 85,
+      commits: 650,
+      experience: 4,
+      confidence: 0.88,
+      route: "/skills/nodejs",
+      color: "#339933",
+      val: 15,
+    },
+    {
+      id: "skill_mongodb",
+      name: "MongoDB",
+      type: "SKILL",
+      description: "NoSQL Database Systems",
+      level: 80,
+      commits: 320,
+      experience: 3,
+      confidence: 0.85,
+      route: "/skills/mongodb",
+      color: "#47A248",
+      val: 12,
+    },
+    {
+      id: "skill_ai",
+      name: "AI Engineering",
+      type: "SKILL",
+      description: "LLM Integration & Prompting",
+      level: 88,
+      commits: 410,
+      experience: 2,
+      confidence: 0.9,
+      route: "/skills/ai",
+      color: "#FF0055",
+      val: 16,
+    },
+    {
+      id: "plat_github",
+      name: "GitHub",
+      type: "PLATFORM",
+      description: "Version Control & CI/CD",
+      level: 90,
+      commits: 3420,
+      experience: 5,
+      confidence: 0.96,
+      route: "/platforms/github",
+      color: "#F0F6FC",
+      val: 14,
+    },
+    {
+      id: "plat_leetcode",
+      name: "LeetCode",
+      type: "PLATFORM",
+      description: "Algorithmic Problem Solving",
+      level: 82,
+      commits: 0,
+      experience: 3,
+      confidence: 0.85,
+      route: "/platforms/leetcode",
+      color: "#FFA116",
+      val: 10,
+    },
+    {
+      id: "proj_velionai",
+      name: "VelionAI",
+      type: "PROJECT",
+      description: "SaaS Intelligence Platform",
+      level: 98,
+      commits: 540,
+      experience: 1,
+      confidence: 0.99,
+      route: "/projects/velionai",
+      color: "#A020F0",
+      val: 25,
+    },
+  ],
   links: [
-    { source: 'prj_velionai', target: 'prj_formify' },
-    { source: 'prj_velionai', target: 'prj_ncs' },
-    { source: 'prj_krishinetra', target: 'prj_summarease' },
-    { source: 'prj_formify', target: 'prj_ncs' }
-  ]
+    { source: "user_lakshya", target: "skill_react", value: 8 },
+    { source: "user_lakshya", target: "skill_nextjs", value: 9 },
+    { source: "user_lakshya", target: "skill_nodejs", value: 6 },
+    { source: "user_lakshya", target: "skill_ai", value: 7 },
+    { source: "user_lakshya", target: "plat_github", value: 10 },
+    { source: "user_lakshya", target: "plat_leetcode", value: 5 },
+    { source: "user_lakshya", target: "proj_velionai", value: 10 },
+    { source: "skill_react", target: "skill_nextjs", value: 8 },
+    { source: "skill_nodejs", target: "skill_mongodb", value: 7 },
+    { source: "skill_nextjs", target: "proj_velionai", value: 9 },
+    { source: "skill_ai", target: "proj_velionai", value: 8 },
+    { source: "plat_github", target: "proj_velionai", value: 6 },
+  ],
 };
 
-// Clean Geometry & Semantic Materials
+// --- Shared 3D Resources (GPU Optimization) ---
+// We instantiate geometries once to avoid memory leaks during dynamic rendering
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 
-const statusColors = {
-  ACTIVE: '#10B981',    // Emerald Green
-  COMPLETED: '#3B82F6', // Blue
-  ARCHIVED: '#6B7280'   // Gray
-};
-
-export default function ProjectDataIntelligenceGraph() {
-  const fgRef = useRef<any>();
+export default function StudentSkillIntelligenceGraph() {
+  const router = useRouter();
+  const fgRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [hoverNode, setHoverNode] = useState<ProjectNode | null>(null);
-  const [highlightNodes, setHighlightNodes] = useState(new Set<string>());
 
+  // State: Interaction & Highlighting
+  const [hoverNode, setHoverNode] = useState<IntelligenceNode | null>(null);
+  const [highlightNodes, setHighlightNodes] = useState(new Set<string>());
+  const [highlightLinks, setHighlightLinks] = useState(new Set<string>());
+
+  // Responsive canvas sizing
   useEffect(() => {
     setDimensions({ width: window.innerWidth, height: window.innerHeight });
-    const handleResize = () => setDimensions({ width: window.innerWidth, height: window.innerHeight });
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const handleResize = () =>
+      setDimensions({ width: window.innerWidth, height: window.innerHeight });
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const { nodeNeighbors } = useMemo(() => {
+  // Pre-compute relationship mappings for O(1) hover lookups
+  const { nodeNeighbors, linkMap } = useMemo(() => {
     const neighbors = new Map<string, Set<string>>();
-    graphData.links.forEach(link => {
-      const sourceId = typeof link.source === 'object' ? link.source.id : link.source;
-      const targetId = typeof link.target === 'object' ? link.target.id : link.target;
+    const links = new Map<string, string>();
+
+    staticGraphData.links.forEach((link) => {
+      const sourceId =
+        typeof link.source === "object" ? link.source.id : link.source;
+      const targetId =
+        typeof link.target === "object" ? link.target.id : link.target;
+
       if (!neighbors.has(sourceId)) neighbors.set(sourceId, new Set());
       if (!neighbors.has(targetId)) neighbors.set(targetId, new Set());
+
       neighbors.get(sourceId)?.add(targetId);
       neighbors.get(targetId)?.add(sourceId);
-    });
-    return { nodeNeighbors: neighbors };
-  }, []);
 
-  const handleNodeHover = useCallback((node: ProjectNode | null) => {
-    setHoverNode(node || null);
-    const newHighlightNodes = new Set<string>();
-    if (node) {
-      newHighlightNodes.add(node.id);
-      nodeNeighbors.get(node.id)?.forEach(neighborId => newHighlightNodes.add(neighborId));
-    }
-    setHighlightNodes(newHighlightNodes);
-  }, [nodeNeighbors]);
-
-  // Engineered Camera Zoom Math
-  const handleNodeClick = useCallback((node: ProjectNode) => {
-    if (!fgRef.current || node.x === undefined || node.y === undefined || node.z === undefined) return;
-
-    // Define resting distance from the node (adjust to zoom closer/further)
-    const distance = 80; 
-    const distRatio = 1 + distance / Math.hypot(node.x, node.y, node.z);
-
-    const newPos = { 
-      x: node.x * distRatio, 
-      y: node.y * distRatio, 
-      z: node.z * distRatio 
-    };
-
-    // cameraPosition(position, lookAt, transitionDurationMs)
-    fgRef.current.cameraPosition(newPos, node, 1500);
-  }, []);
-
-  const customNodeRenderer = useCallback((node: ProjectNode) => {
-    const group = new THREE.Group();
-    const isHighlighted = highlightNodes.size === 0 || highlightNodes.has(node.id);
-    const color = statusColors[node.status];
-
-    const material = new THREE.MeshStandardMaterial({
-      color: color,
-      roughness: 0.2,
-      metalness: 0.1,
-      transparent: true,
-      opacity: isHighlighted ? 1 : 0.2
+      links.set(`${sourceId}-${targetId}`, `${sourceId}-${targetId}`);
+      links.set(`${targetId}-${sourceId}`, `${sourceId}-${targetId}`);
     });
 
-    const mesh = new THREE.Mesh(sphereGeometry, material);
-    
-    // Scale logically based on complexity
-    const visualSize = Math.max(4, (node.complexityScore / 100) * 15); 
-    mesh.scale.set(visualSize, visualSize, visualSize);
-    group.add(mesh);
+    return { nodeNeighbors: neighbors, linkMap: links };
+  }, []);
 
-    if (isHighlighted) {
-      const sprite = new SpriteText(node.name);
-      sprite.color = '#FFFFFF';
-      sprite.textHeight = visualSize * 0.4;
-      sprite.position.set(0, visualSize + 6, 0);
-      sprite.material.depthWrite = false;
-      group.add(sprite);
-    }
+  // --- Interaction Handlers ---
+  const handleNodeHover = useCallback(
+    (node: IntelligenceNode | null) => {
+      setHoverNode(node || null);
 
-    return group;
-  }, [highlightNodes]);
+      const newHighlightNodes = new Set<string>();
+      const newHighlightLinks = new Set<string>();
+
+      if (node) {
+        newHighlightNodes.add(node.id);
+        const neighbors = nodeNeighbors.get(node.id);
+        if (neighbors) {
+          neighbors.forEach((neighborId) => {
+            newHighlightNodes.add(neighborId);
+            newHighlightLinks.add(
+              linkMap.get(`${node.id}-${neighborId}`) as string,
+            );
+          });
+        }
+      }
+
+      setHighlightNodes(newHighlightNodes);
+      setHighlightLinks(newHighlightLinks);
+    },
+    [nodeNeighbors, linkMap],
+  );
+
+  const handleNodeClick = useCallback(
+    (node: IntelligenceNode) => {
+      // 1. Cinematic Camera Focus
+      const distance = 100;
+      const distRatio =
+        1 + distance / Math.hypot(node.x || 0, node.y || 0, node.z || 0);
+
+      fgRef.current?.cameraPosition(
+        {
+          x: (node.x || 0) * distRatio,
+          y: (node.y || 0) * distRatio,
+          z: (node.z || 0) * distRatio,
+        },
+        { x: node.x, y: node.y, z: node.z },
+        2000, // 2 second transition
+      );
+
+      // 2. Next.js Routing
+      // setTimeout to allow the user to see the camera pan before hard redirecting,
+      // or route immediately and rely on Next.js transitions.
+      setTimeout(() => {
+        router.push(node.route);
+      }, 800);
+    },
+    [router],
+  );
+
+  // --- Custom Three.js Rendering ---
+  const nodeThreeObject = useCallback(
+    (node: IntelligenceNode) => {
+      const group = new THREE.Group();
+
+      // Core Mesh
+      const material = new THREE.MeshStandardMaterial({
+        color: node.color,
+        emissive: node.color,
+        emissiveIntensity: node.type === "USER" ? 2.5 : 1.2,
+        roughness: 0.2,
+        metalness: 0.8,
+        transparent: true,
+        opacity:
+          highlightNodes.size === 0
+            ? 0.9
+            : highlightNodes.has(node.id)
+              ? 1
+              : 0.2,
+      });
+
+      const sphere = new THREE.Mesh(sphereGeometry, material);
+      const size = Math.cbrt(node.val) * 2.5;
+      sphere.scale.set(size, size, size);
+      group.add(sphere);
+
+      // Floating Label
+      if (highlightNodes.size === 0 || highlightNodes.has(node.id)) {
+        const sprite = new SpriteText(node.name);
+        sprite.color = "#ffffff";
+        sprite.textHeight = size * 0.8;
+        sprite.position.set(0, size + 4, 0);
+        sprite.material.depthWrite = false; // Prevent clipping
+        sprite.material.transparent = true;
+        group.add(sprite);
+      }
+
+      return group;
+    },
+    [highlightNodes],
+  );
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-[#050505] font-sans">
+    <div className="relative w-full h-screen bg-[#020202] overflow-hidden">
+      {/* 3D Canvas Architecture */}
       <div className="absolute inset-0 z-0">
         {dimensions.width > 0 && (
           <ForceGraph3D
             ref={fgRef}
             width={dimensions.width}
             height={dimensions.height}
-            graphData={graphData}
-            backgroundColor="#050505"
+            graphData={staticGraphData}
+            backgroundColor="#020202"
+            // Interaction configuration
             onNodeHover={handleNodeHover as any}
             onNodeClick={handleNodeClick as any}
-            nodeThreeObject={customNodeRenderer as any}
-            linkColor={() => '#333333'}
-            linkWidth={0.5}
+            // Custom Node Rendering
+            nodeThreeObject={nodeThreeObject as any}
+            // Link Configuration & Relationships
+            linkColor={(link: any) =>
+              highlightLinks.has(`${link.source.id}-${link.target.id}`) ||
+              highlightLinks.has(`${link.target.id}-${link.source.id}`)
+                ? "#ffffff"
+                : "rgba(255,255,255,0.1)"
+            }
+            linkWidth={(link: any) =>
+              highlightLinks.has(`${link.source.id}-${link.target.id}`) ||
+              highlightLinks.has(`${link.target.id}-${link.source.id}`)
+                ? 1.5
+                : 0.5
+            }
+            // Directional Particles (Intelligence Flow)
+            linkDirectionalParticles={(link: any) =>
+              highlightLinks.has(`${link.source.id}-${link.target.id}`) ||
+              highlightLinks.has(`${link.target.id}-${link.source.id}`)
+                ? 4
+                : 0
+            }
+            linkDirectionalParticleWidth={1.5}
+            linkDirectionalParticleSpeed={(link: any) => link.value * 0.001}
+            linkDirectionalParticleColor={() => "#00F0FF"}
+            // Physics & Performance Optimization
             cooldownTicks={100}
+            warmupTicks={50}
             enableNodeDrag={false}
           />
         )}
       </div>
 
+      {/* Cinematic Lighting Overlay */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#020202]/40 to-[#020202] opacity-80" />
+
+      {/* Framer Motion Hover Intelligence Panel */}
       <AnimatePresence>
         {hoverNode && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-8 left-8 z-50 w-80 rounded-xl border border-white/10 bg-[#111111] p-5 shadow-2xl"
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="absolute bottom-10 left-10 z-50 w-80 rounded-2xl border border-white/10 bg-black/60 p-6 backdrop-blur-xl shadow-2xl"
           >
-            <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-white">{hoverNode.name}</h2>
-              <span className="rounded px-2 py-1 text-[10px] font-bold tracking-wider" style={{ backgroundColor: `${statusColors[hoverNode.status]}20`, color: statusColors[hoverNode.status] }}>
-                {hoverNode.status}
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-2xl font-semibold tracking-tight text-white">
+                {hoverNode.name}
+              </h2>
+              <span
+                className="rounded-full px-2.5 py-0.5 text-xs font-medium uppercase tracking-wider"
+                style={{
+                  backgroundColor: `${hoverNode.color}20`,
+                  color: hoverNode.color,
+                  border: `1px solid ${hoverNode.color}40`,
+                }}
+              >
+                {hoverNode.type}
               </span>
             </div>
-            
-            <p className="mb-5 text-sm text-gray-400">{hoverNode.description}</p>
-            
-            <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-4">
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-500 flex items-center"><GitCommit className="w-3 h-3 mr-1"/> Commits</span>
-                <span className="text-sm font-medium text-gray-200">{hoverNode.commitCount}</span>
+
+            <p className="mb-6 text-sm text-gray-400">
+              {hoverNode.description}
+            </p>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex flex-col space-y-1">
+                <span className="flex items-center text-xs text-gray-500">
+                  <BrainCircuit className="mr-1.5 h-3 w-3" /> Skill Level
+                </span>
+                <span className="text-lg font-medium text-white">
+                  {hoverNode.level}/100
+                </span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-500 flex items-center"><Activity className="w-3 h-3 mr-1"/> Complexity</span>
-                <span className="text-sm font-medium text-gray-200">{hoverNode.complexityScore}/100</span>
+
+              <div className="flex flex-col space-y-1">
+                <span className="flex items-center text-xs text-gray-500">
+                  <GitCommit className="mr-1.5 h-3 w-3" /> Activity
+                </span>
+                <span className="text-lg font-medium text-white">
+                  {hoverNode.commits.toLocaleString()}
+                </span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-500 flex items-center"><Star className="w-3 h-3 mr-1"/> Stars</span>
-                <span className="text-sm font-medium text-gray-200">{hoverNode.stars}</span>
+
+              <div className="flex flex-col space-y-1">
+                <span className="flex items-center text-xs text-gray-500">
+                  <Clock className="mr-1.5 h-3 w-3" /> Experience
+                </span>
+                <span className="text-lg font-medium text-white">
+                  {hoverNode.experience} Yrs
+                </span>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs text-gray-500 flex items-center"><Clock className="w-3 h-3 mr-1"/> Updated</span>
-                <span className="text-sm font-medium text-gray-200">{hoverNode.lastUpdated}</span>
+
+              <div className="flex flex-col space-y-1">
+                <span className="flex items-center text-xs text-gray-500">
+                  <Target className="mr-1.5 h-3 w-3" /> Confidence
+                </span>
+                <span className="text-lg font-medium text-white">
+                  {(hoverNode.confidence * 100).toFixed(0)}%
+                </span>
               </div>
             </div>
 
-            <div className="mt-5 text-center text-xs text-gray-500 flex justify-center items-center">
-               <ExternalLink className="w-3 h-3 mr-1"/> Double-click node for GitHub
+            <div className="mt-6 flex w-full items-center justify-center rounded-lg border border-white/5 bg-white/5 py-2 text-xs text-gray-400 transition-colors hover:bg-white/10">
+              <ExternalLink className="mr-2 h-3 w-3" /> Click node to explore
             </div>
           </motion.div>
         )}
