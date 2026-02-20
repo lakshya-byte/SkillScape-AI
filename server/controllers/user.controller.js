@@ -3,9 +3,6 @@ import { FriendRequest } from "../models/FriendRequest.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-
-
-
 const getMyself = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select(
