@@ -3,11 +3,7 @@
 import dynamic from "next/dynamic";
 import LazyMount from "@/components/landing/utils/LazyMount";
 
-/*
-========================================
-Dynamic imports (Bundle-level optimization)
-========================================
-*/
+
 
 // Hero loads immediately (LCP element)
 const HeroSection = dynamic(
